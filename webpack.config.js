@@ -4,7 +4,7 @@ module.exports = {
   mode: 'production',
   entry: './index.js',
   output: {
-    filename: 'TurtleCoinRPCBundle.js',
+    filename: 'TurtleCoinRPC.js',
     library: 'TurtleCoinRPC',
     libraryTarget: 'umd'
   },
