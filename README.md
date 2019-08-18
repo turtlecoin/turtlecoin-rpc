@@ -42,7 +42,7 @@ const daemon = new TurtleCoind({
 
 ### Wallet-API
 ```javascript
-const WalletAPI = require('turtlecoin-rpc').WalletAPI;
+const WalletAPI = require('turtlecoin-rpc').WalletAPI
 
 const wallet = new WalletAPI({
   host: '127.0.0.1', // ip address or hostname of wallet-api host
@@ -53,8 +53,8 @@ const wallet = new WalletAPI({
   defaultMixin: 3, // should be configured to the default mixin, or false if no default mixin is set
   defaultFee: 0.1, // the default fee of your network, in decimal not atomic units
   decimalDivisor: 100, // how many decimals will be used
-  defaultUnlockTime: 0 // default unlock time 
-});
+  defaultUnlockTime: 0 // default unlock time
+})
 ```
 
 ### TurtleService
@@ -2639,7 +2639,7 @@ Some paramters may be *optional* or *required* as documented.
 
 Some of the descriptions of the functions were re-used from @zpalmtree's [Wallet-API Docs](https://github.com/turtlecoin/wallet-api-docs) and are released under the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0).
 
-### wallet.open = function (filename, password, host, port, ssl)
+### wallet.open(filename, password, host, port, ssl)
 
 Opens a wallet from file.
 
@@ -2656,7 +2656,7 @@ Opens a wallet from file.
 #### Example Code
 
 ```js
-wallet.open('yourwallet', 'yourpassword');
+wallet.open('yourwallet', 'yourpassword')
 ```
 
 ### wallet.importKey(filename, password, viewKey, spendKey, scanHeight, host, port, ssl)
@@ -2679,7 +2679,13 @@ Imports a wallet from private viewKey and a secret spendKey and saves it to disk
 #### Example Code
 
 ```js
-wallet.importKey('mywallet', 'mypassword', '2c9547c89be67d83af0689d8f7b5e6448536964cf2f066c67a6ff463b3d7e200', 'f94442b1496d61f00d604fe2603614b0f5fa60d19ffef0ce976a32e6080be706', 500000);
+wallet.importKey(
+  'mywallet',
+  'mypassword',
+  '2c9547c89be67d83af0689d8f7b5e6448536964cf2f066c67a6ff463b3d7e200',
+  'f94442b1496d61f00d604fe2603614b0f5fa60d19ffef0ce976a32e6080be706',
+  500000
+)
 ```
 
 ### wallet.importSeed(filename, password, mnemonicSeed, scanHeight, host, port, ssl)
@@ -2698,11 +2704,15 @@ Imports a wallet from a mnemonic seed and saves it to disk.
 |port|no|The port wallet-api is running on (Defaults to 8070)|integer|
 |ssl|no|Whether or not to connect using SSL (Defaults to false)|boolean|
 
-
 #### Example Code
 
 ```js
-wallet.importSeed('mywallet', 'mypassword', 'object argue opacity ongoing spud puppy smash javelin begun click jargon solved buffet warped stockpile going rhino input bailed tufts laboratory amended nurse object begun', 500000);
+wallet.importSeed(
+  'mywallet',
+  'mypassword',
+  'object argue opacity ongoing spud puppy smash javelin begun click jargon solved buffet warped stockpile going rhino input bailed tufts laboratory amended nurse object begun',
+  500000
+)
 ```
 
 ### wallet.importViewOnly(filename, password, viewKey, address, scanHeight, host, port, ssl)
@@ -2725,7 +2735,13 @@ Imports a view key for a view-only wallet and saves it to disk.
 #### Example Code
 
 ```js
-wallet.importViewOnly('mywallet', 'mypassword', 'af12383104e1e6a52bc775b9b6cc1e2a00aa2081b2accfb3743b3b81293c0f04', 'TRTLuzXbDdWRsWuL7APprYZEeHW3G4XXuTbzWYtqPoWaSwNkMoYqYRCdtozikcQe3xGGM2PVJg169bE7jzF9dkPGhf9BbMfBZyH', 500000);
+wallet.importViewOnly(
+  'mywallet',
+  'mypassword',
+  'af12383104e1e6a52bc775b9b6cc1e2a00aa2081b2accfb3743b3b81293c0f04',
+  'TRTLuzXbDdWRsWuL7APprYZEeHW3G4XXuTbzWYtqPoWaSwNkMoYqYRCdtozikcQe3xGGM2PVJg169bE7jzF9dkPGhf9BbMfBZyH',
+  500000
+)
 ```
 
 ### wallet.create(filename, password, host, port, ssl)
@@ -2745,7 +2761,7 @@ Creates a new wallet and saves it to disk.
 #### Example Code
 
 ```js
-wallet.create('mywallet', 'mypassword');
+wallet.create('mywallet', 'mypassword')
 ```
 
 ### wallet.close()
@@ -2755,7 +2771,7 @@ Closes and saves the wallet that is currently open.
 #### Example Code
 
 ```js
-wallet.close();
+wallet.close()
 ```
 
 ### wallet.addresses()
@@ -2778,11 +2794,12 @@ Deletes the given subwallet from the container
 |---|---|---|---|
 |address|yes|The public address of the subwallet to be deleted.|string|
 
-
 #### Example Code
 
 ```js
-wallet.deleteAddress('TRTLuzXbDdWRsWuL7APprYZEeHW3G4XXuTbzWYtqPoWaSwNkMoYqYRCdtozikcQe3xGGM2PVJg169bE7jzF9dkPGhf9BbMfBZyH');
+wallet.deleteAddress(
+  'TRTLuzXbDdWRsWuL7APprYZEeHW3G4XXuTbzWYtqPoWaSwNkMoYqYRCdtozikcQe3xGGM2PVJg169bE7jzF9dkPGhf9BbMfBZyH'
+)
 ```
 
 ### wallet.primaryAddress()
@@ -2792,7 +2809,7 @@ Gets the 'primary' address.
 #### Example Code
 
 ```js
-wallet.primaryAddress();
+wallet.primaryAddress()
 ```
 
 ### wallet.createAddress()
@@ -2802,7 +2819,7 @@ Creates a new, random address in the wallet container.
 #### Example Code
 
 ```js
-wallet.createAddress();
+wallet.createAddress()
 ```
 
 ### wallet.importAddress()
@@ -2819,7 +2836,10 @@ Imports a subwallet with the given private spend key.
 #### Example Code
 
 ```js
-wallet.importAddress('6bc61e441b9c0e04779a1f6dbb3599cd17ba42973ebc2137e12ac5857c47a30f', 50000);
+wallet.importAddress(
+  '6bc61e441b9c0e04779a1f6dbb3599cd17ba42973ebc2137e12ac5857c47a30f',
+  50000
+)
 ```
 
 ### wallet.importViewAddress(spendKey, scanHeight)
@@ -2836,7 +2856,10 @@ Imports a view only subwallet with the given publicSpendKey.
 #### Example Code
 
 ```js
-wallet.importViewAddress('05c6b94bbf8982ce6ffe0e52f606e439c0a04c62dbd6fdac819d1fb68a786003', 50000);
+wallet.importViewAddress(
+  '05c6b94bbf8982ce6ffe0e52f606e439c0a04c62dbd6fdac819d1fb68a786003',
+  50000
+)
 ```
 
 ### wallet.createIntegratedAddress(address, paymentID)
@@ -2853,7 +2876,10 @@ Creates an integrated address from an address and payment ID.
 #### Example Code
 
 ```js
-wallet.createIntegratedAddress('TRTLv1EGFinJDHKbxFT8zDT59fVF8duLqFrGfQMbyPqgEh9fLfXZcEsLosHQ38gaJfA2een645nbJKUgoFpbouKsXu7NDhxxrH1', '86C3924C5B3DF2BD8D1E3F5D3A3229ABA47472BCF0A332C00F05A33D63D9C60E');
+wallet.createIntegratedAddress(
+  'TRTLv1EGFinJDHKbxFT8zDT59fVF8duLqFrGfQMbyPqgEh9fLfXZcEsLosHQ38gaJfA2een645nbJKUgoFpbouKsXu7NDhxxrH1',
+  '86C3924C5B3DF2BD8D1E3F5D3A3229ABA47472BCF0A332C00F05A33D63D9C60E'
+)
 ```
 
 ### wallet.getNode()
@@ -2863,7 +2889,7 @@ Gets the node address, port, fee, and fee address.
 #### Example Code
 
 ```js
-wallet.getNode();
+wallet.getNode()
 ```
 
 ### wallet.setNode(host, port, ssl)
@@ -2881,7 +2907,7 @@ Sets the node address and port.
 #### Example Code
 
 ```js
-wallet.setNode(127.0.0.1, 11898, true)
+wallet.setNode('127.0.0.1', 11898, true)
 ```
 
 ### wallet.keys(address)
@@ -2897,7 +2923,9 @@ Gets the public and private spend key for the given address.
 #### Example Code
 
 ```js
-wallet.keys('TRTLv1CK8YmPZqRZzhLD9fHJszHKrPpbyaRQSYwH4FscapFN9rd27XZBew5becCWMEQVUwoRAQvi9E6wKPwAM7AufPtRts91Ljh');
+wallet.keys(
+  'TRTLv1CK8YmPZqRZzhLD9fHJszHKrPpbyaRQSYwH4FscapFN9rd27XZBew5becCWMEQVUwoRAQvi9E6wKPwAM7AufPtRts91Ljh'
+)
 ```
 
 ### wallet.keysMnemonic(address)
@@ -2913,7 +2941,9 @@ Gets the mnemonic seed for the given address.
 #### Example Code
 
 ```js
-wallet.keys('TRTLv38Bs9PVUxpDUagenf7RK8YZnJfoS41sNsttLXNj2PQU4Yeoju6Wj3RFwxy2gG81K5ANWtnj6HJSxU8Sba2c2J6V5ugGbah');
+wallet.keys(
+  'TRTLv38Bs9PVUxpDUagenf7RK8YZnJfoS41sNsttLXNj2PQU4Yeoju6Wj3RFwxy2gG81K5ANWtnj6HJSxU8Sba2c2J6V5ugGbah'
+)
 ```
 
 ### wallet.transactions(startHeight, endHeight)
@@ -2930,7 +2960,7 @@ Gets a list of all transactions in the wallet container.
 #### Example Code
 
 ```js
-wallet.transactions(100000, 250000);
+wallet.transactions(100000, 250000)
 ```
 
 ### wallet.transactionByHash(hash)
@@ -2946,7 +2976,7 @@ Gets details on the given transaction, if found.
 #### Example Code
 
 ```js
-wallet.transactionByHash('e6860c84aad2ef874beb4b584f4d97b805dc06b6f8e743175f43e882c6373afa');
+wallet.transactionByHash('e6860c84aad2ef874beb4b584f4d97b805dc06b6f8e743175f43e882c6373afa')
 ```
 
 ### wallet.unconfirmedTransactions(address)
@@ -2962,7 +2992,9 @@ Gets a list of all unconfirmed, outgoing transactions in the wallet container.
 #### Example Code
 
 ```js
-wallet.unconfirmedTransactions('TRTLuyMZMD3HMBk6SeniD7V5xhYtt581KQDQmyQXtD44jaSQcCR3DonjTtQy4iJbysRgVWLuSvCTYhVCxo8xt21kZCSLxFTMyEm');
+wallet.unconfirmedTransactions(
+  'TRTLuyMZMD3HMBk6SeniD7V5xhYtt581KQDQmyQXtD44jaSQcCR3DonjTtQy4iJbysRgVWLuSvCTYhVCxo8xt21kZCSLxFTMyEm'
+)
 ```
 
 ### wallet.transactionsByAddress(address, startHeight, endHeight)
@@ -2980,7 +3012,11 @@ Returns transactions for the wallet starting at start height for 1,000 blocks, t
 #### Example Code
 
 ```js
-wallet.transactionsByAddress('TRTLv3zoRX86zxYhwvNkx3bdLPFGAPtDgDTe5GGx3Hz6Uv9tRgc8rkpgFAHV2z1Ys9KvXYYvACTm8AGRcSyZ9gc6e7tC4NRTciP', 100000, 250000);
+wallet.transactionsByAddress(
+  'TRTLv3zoRX86zxYhwvNkx3bdLPFGAPtDgDTe5GGx3Hz6Uv9tRgc8rkpgFAHV2z1Ys9KvXYYvACTm8AGRcSyZ9gc6e7tC4NRTciP',
+  100000,
+  250000
+)
 ```
 
 ### wallet.sendBasic(address, amount, paymentId)
@@ -2995,11 +3031,14 @@ This method will take funds from all subwallets as needed, and will use the prim
 |amount|Yes|Amount of TRTL to send.|number|
 |paymentId|No|Payment ID to use for the transaction.|string|
 
-
 #### Example Code
 
 ```js
-wallet.sendBasic('TRTLuycsDuMXGMSKoeFkKwNBmExD81xbmbHpn8qkbha55r7K6NRFVTX47u1qHWNG9XM1iECTgH8oB6Tz2Ayi2iCmDAs7P9Spaf4', 1000000, 'CFFC32C630075C26B92F641C4332FC20A4723690097D3C491F6E0279ED4B430D');
+wallet.sendBasic(
+  'TRTLuycsDuMXGMSKoeFkKwNBmExD81xbmbHpn8qkbha55r7K6NRFVTX47u1qHWNG9XM1iECTgH8oB6Tz2Ayi2iCmDAs7P9Spaf4',
+  10000.00,
+  'CFFC32C630075C26B92F641C4332FC20A4723690097D3C491F6E0279ED4B430D'
+)
 ```
 
 ### wallet.sendAdvanced(destinations, mixin, fee, sourceAddresses, paymentId, changeAddress, unlockTime)
@@ -3018,18 +3057,25 @@ Note that every parameters sans destinations is optional.
 |changeAddress|No|Public address to send the change to.|string|
 |unlockTime|No|Amount of time before unlocking the transaction.|uint64_t|
 
-
 #### Example Code
 
 ```js
-wallet.sendAdvanced([
+wallet.sendAdvanced(
+  [
     {
       address: 'TRTLv2Fyavy8CXG8BPEbNeCHFZ1fuDCYCZ3vW5H5LXN4K2M2MHUpTENip9bbavpHvvPwb4NDkBWrNgURAd5DB38FHXWZyoBh4wW',
-      amount: 1234
+      amount: 12.34
     }
-], 3, 10, [
+  ],
+  3,
+  0.10,
+  [
     'TRTLv2Fyavy8CXG8BPEbNeCHFZ1fuDCYCZ3vW5H5LXN4K2M2MHUpTENip9bbavpHvvPwb4NDkBWrNgURAd5DB38FHXWZyoBh4wW'
-], '38a8224a4c8bc5f060555cf9e89551dcd0cbb1c587a52b63e98f71280c362ee4', 'TRTLv2Fyavy8CXG8BPEbNeCHFZ1fuDCYCZ3vW5H5LXN4K2M2MHUpTENip9bbavpHvvPwb4NDkBWrNgURAd5DB38FHXWZyoBh4wW', 1200000);
+  ],
+  '38a8224a4c8bc5f060555cf9e89551dcd0cbb1c587a52b63e98f71280c362ee4',
+  'TRTLv2Fyavy8CXG8BPEbNeCHFZ1fuDCYCZ3vW5H5LXN4K2M2MHUpTENip9bbavpHvvPwb4NDkBWrNgURAd5DB38FHXWZyoBh4wW',
+  1200000
+)
 ```
 
 ### wallet.sendFusionBasic()
@@ -3039,7 +3085,7 @@ Sends a fusion transaction.
 #### Example Code
 
 ```js
-wallet.sendFusionBasic();
+wallet.sendFusionBasic()
 ```
 
 ### wallet.sendFusionAdvanced(address, mixin, sourceAddresses)
@@ -3057,7 +3103,14 @@ Sends a fusion transaction.
 #### Example Code
 
 ```js
-wallet.sendFusionAdvanced('TRTLv1dBzjcU5YAfo8vJoHYRaEyWerzWXCPFbHvpSnCCfQpnQcrLePjad6VVyPw5UU7m6xf7y8EX2LFosWKet6gdCZeFSFZjmRB', 3, ['TRTLuxpsYa3ai2P8hVgLQDa4ZA5UQgvjyDfADEmjF5Z2RMqE7CpW1YQbwVo1HTCEpDdfzQR7xKWduSQhC3sYd9ePNYV5h3GsGtm','TRTLuyHC3shdymv8Hb1Nqb3NFREJJXCyyfLQruztwnWLayB3dTfqekZUDmwF4QvSiBRA4XQrd3LEgLNWuTaJtEa8XsgBCbSEWWw']);
+wallet.sendFusionAdvanced(
+  'TRTLv1dBzjcU5YAfo8vJoHYRaEyWerzWXCPFbHvpSnCCfQpnQcrLePjad6VVyPw5UU7m6xf7y8EX2LFosWKet6gdCZeFSFZjmRB',
+  3,
+  [
+    'TRTLuxpsYa3ai2P8hVgLQDa4ZA5UQgvjyDfADEmjF5Z2RMqE7CpW1YQbwVo1HTCEpDdfzQR7xKWduSQhC3sYd9ePNYV5h3GsGtm',
+    'TRTLuyHC3shdymv8Hb1Nqb3NFREJJXCyyfLQruztwnWLayB3dTfqekZUDmwF4QvSiBRA4XQrd3LEgLNWuTaJtEa8XsgBCbSEWWw'
+  ]
+)
 ```
 
 ### wallet.transactionPrivateKey(hash)
@@ -3070,12 +3123,10 @@ Gets the transaction private key of the given transaction. This can be used to a
 |---|---|---|---|
 |hash|Yes|Hash of the transaction you wish to audit.|string|
 
-
-
 #### Example Code
 
 ```js
-wallet.transactionPrivateKey('05372052d1b1ef11b0ea889d4c9389995566f4ba63296d3e1197d277587e5467');
+wallet.transactionPrivateKey('05372052d1b1ef11b0ea889d4c9389995566f4ba63296d3e1197d277587e5467')
 ```
 
 ### wallet.balance(address)
@@ -3089,7 +3140,9 @@ wallet.transactionPrivateKey('05372052d1b1ef11b0ea889d4c9389995566f4ba63296d3e11
 #### Example Code
 
 ```js
-wallet.balance('TRTLv1ievFjVyKoTh2VPo12sj5WEiKJmHCDdqpcvU42zMkUvHd6diyW4britmMBXvE5nyHVLdDSiugkbfNnSbo82WrRuiZrdF6k');
+wallet.balance(
+  'TRTLv1ievFjVyKoTh2VPo12sj5WEiKJmHCDdqpcvU42zMkUvHd6diyW4britmMBXvE5nyHVLdDSiugkbfNnSbo82WrRuiZrdF6k'
+)
 ```
 
 ### wallet.balances()
@@ -3099,7 +3152,7 @@ Get the balance for the entire wallet container
 #### Example Code
 
 ```js
-wallet.balances();
+wallet.balances()
 ```
 
 ### wallet.save()
@@ -3109,10 +3162,10 @@ Saves the wallet state.
 #### Example Code
 
 ```js
-wallet.save();
+wallet.save()
 ```
 
-### wallet.reset(scanHeight);
+### wallet.reset(scanHeight)
 
 Resets and saves the wallet, beginning scanning from height given, if any.
 
@@ -3125,12 +3178,12 @@ Resets and saves the wallet, beginning scanning from height given, if any.
 #### Example Code
 
 ```js
-wallet.reset(187000);
+wallet.reset(187000)
 ```
 
 ### wallet.validateAddress(address)
 
-Validate an address. If the address is valid, a 200 response code will be returned, else a 400 response code will be returned.
+Validate an address. If the address is valid the promise will resolve else it will be rejected.
 
 #### Method Parameters
 
@@ -3141,7 +3194,9 @@ Validate an address. If the address is valid, a 200 response code will be return
 #### Example Code
 
 ```js
-wallet.validateAddress('TRTLuzqYTZM2D8wL1MNbETjPNwQKGz5vFgxnjwc3g8vB1L9bik9Qp6UGLkuEGEv9prS1NAMN9PSepMzrfbVUy6f9QnXM3B44Rxw');
+wallet.validateAddress(
+  'TRTLuzqYTZM2D8wL1MNbETjPNwQKGz5vFgxnjwc3g8vB1L9bik9Qp6UGLkuEGEv9prS1NAMN9PSepMzrfbVUy6f9QnXM3B44Rxw'
+)
 ```
 
 ### wallet.status()
@@ -3151,7 +3206,7 @@ Get the wallet sync status, peer count, and hashrate.
 #### Example Code
 
 ```js
-wallet.status();
+wallet.status()
 ```
 
 ## TurtleService RPC API Interface
