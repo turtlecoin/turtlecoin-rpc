@@ -3015,7 +3015,7 @@ Note that every parameters sans destinations is optional.
 |fee|No|Fee to use for the transaction.|array|
 |sourceAddresses|No|Subwallet addresses to use to fund the payment.|array|
 |paymentId|No|Payment ID to use in the transaction.|array|
-|changeAddress|No|Public address to send the change to.|array|
+|changeAddress|No|Public address to send the change to.|string|
 |unlockTime|No|Amount of time before unlocking the transaction.|uint64_t|
 
 
