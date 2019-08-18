@@ -3022,24 +3022,14 @@ Note that every parameters sans destinations is optional.
 #### Example Code
 
 ```js
-const transactionInfo = {
-  "destinations": [
+wallet.sendAdvanced([
     {
-      "address": "TRTLv2Fyavy8CXG8BPEbNeCHFZ1fuDCYCZ3vW5H5LXN4K2M2MHUpTENip9bbavpHvvPwb4NDkBWrNgURAd5DB38FHXWZyoBh4wW",
-      "amount": 1234
+      address: 'TRTLv2Fyavy8CXG8BPEbNeCHFZ1fuDCYCZ3vW5H5LXN4K2M2MHUpTENip9bbavpHvvPwb4NDkBWrNgURAd5DB38FHXWZyoBh4wW',
+      amount: 1234
     }
-  ],
-  "mixin": 3,
-  "fee": 10,
-  "sourceAddresses": [
-    "TRTLv2Fyavy8CXG8BPEbNeCHFZ1fuDCYCZ3vW5H5LXN4K2M2MHUpTENip9bbavpHvvPwb4NDkBWrNgURAd5DB38FHXWZyoBh4wW"
-  ],
-  "paymentID": "38a8224a4c8bc5f060555cf9e89551dcd0cbb1c587a52b63e98f71280c362ee4",
-  "changeAddress": "TRTLv2Fyavy8CXG8BPEbNeCHFZ1fuDCYCZ3vW5H5LXN4K2M2MHUpTENip9bbavpHvvPwb4NDkBWrNgURAd5DB38FHXWZyoBh4wW",
-  "unlockTime": 1200000
-};
-
-wallet.sendAdvanced(transactionInfo);
+], 3, 10, [
+    'TRTLv2Fyavy8CXG8BPEbNeCHFZ1fuDCYCZ3vW5H5LXN4K2M2MHUpTENip9bbavpHvvPwb4NDkBWrNgURAd5DB38FHXWZyoBh4wW'
+], '38a8224a4c8bc5f060555cf9e89551dcd0cbb1c587a52b63e98f71280c362ee4', 'TRTLv2Fyavy8CXG8BPEbNeCHFZ1fuDCYCZ3vW5H5LXN4K2M2MHUpTENip9bbavpHvvPwb4NDkBWrNgURAd5DB38FHXWZyoBh4wW', 1200000);
 ```
 
 ### wallet.sendFusionBasic()
