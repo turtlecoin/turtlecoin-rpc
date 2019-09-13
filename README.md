@@ -36,7 +36,8 @@ const daemon = new TurtleCoind({
   host: '127.0.0.1', // ip address or hostname of the TurtleCoind host
   port: 11898, // what port is the RPC server running on
   timeout: 2000, // request timeout
-  ssl: false // whether we need to connect using SSL/TLS
+  ssl: false, // whether we need to connect using SSL/TLS
+  userAgent: 'turtlecoin-rpc/1.0.3' // specify a customer user-agent or use the default
 })
 ```
 
