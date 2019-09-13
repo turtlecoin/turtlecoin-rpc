@@ -54,7 +54,8 @@ const wallet = new WalletAPI({
   defaultMixin: 3, // should be configured to the default mixin, or false if no default mixin is set
   defaultFee: 0.1, // the default fee of your network, in decimal not atomic units
   decimalDivisor: 100, // how many decimals will be used
-  defaultUnlockTime: 0 // default unlock time
+  defaultUnlockTime: 0, // default unlock time
+  userAgent: 'turtlecoin-rpc/1.0.3' // specify a customer user-agent or use the default
 })
 ```
 
@@ -77,6 +78,7 @@ const service = new TurtleService({
   defaultFirstBlockIndex: 1, // the default first block index we will use when it is required
   defaultUnlockTime: 0, // the default unlockTime for transactions
   defaultFusionThreshold: 10000000, // the default fusionThreshold for fusion transactions
+  userAgent: 'turtlecoin-rpc/1.0.3' // specify a customer user-agent or use the default
 })
 ```
 
@@ -88,7 +90,8 @@ const client = new Client({
   host: '127.0.0.1', // ip address or hostname of the TurtleCoind host
   port: 11898, // what port is the RPC server running on
   timeout: 2000, // request timeout
-  ssl: false // whether we need to connect using SSL/TLS
+  ssl: false, // whether we need to connect using SSL/TLS
+  userAgent: 'turtlecoin-rpc/1.0.3' // specify a customer user-agent or use the default
 })
 ```
 
