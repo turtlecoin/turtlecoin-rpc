@@ -148,6 +148,65 @@ daemon.getBlocks({
 ]
 ```
 
+### daemon.getBlocksFast(options)
+
+Returns up to 1,000 serialized blocks and transactions based on the supplied blocks
+
+For the best results, the block hashes you supply should follow the following order:
+
+The first 10 blocks are sequential descending, next goes in pow(2,n), like 2, 4, 8, 16, 32, 64 and so on, and the last one is **must** always be genesis block.
+
+#### Method Parameters
+
+|Argument|Mandatory|Description|Format|
+|---|---|---|---|
+|blockHashes|Yes|The block hashes to query|strings|
+|blockCount|No|The number of blocks to return (0 <= count <= 1000)|integer|
+
+#### Example Code
+
+```javascript
+daemon.getBlocksFast({
+  blockHashes: [
+    'a2e4fb2fc107f3e5c83ea2a1457b20fd82289a779263ea79692865d5005adf73',
+    '7fb97df81221dd1366051b2d0bc7f49c66c22ac4431d879c895b06d66ef66f4c'
+  ]
+}).then((result) => {
+  // do something
+})
+```
+
+#### Example Data
+
+```javascript
+[
+  {
+    "cumul_size": 22041,
+    "difficulty": 285124963,
+    "hash": "62f0058453292af5e1aa070f8526f7642ab6974c6af2c17088c21b31679c813d",
+    "height": 500000,
+    "timestamp": 1527834137,
+    "tx_count": 4
+  },
+  {
+    "cumul_size": 384,
+    "difficulty": 258237161,
+    "hash": "74a45602da61b8b8ff565b1c81c854416046a23ca53f4416684ffaa60bc50796",
+    "height": 499999,
+    "timestamp": 1527834031,
+    "tx_count": 1
+  },
+  {
+    "cumul_size": 418,
+    "difficulty": 256087255,
+    "hash": "ed628ff13eacd5b99c5d7bcb3aeb29ef8fc61dbb21d48b65e0cdaf5ab21211c1",
+    "height": 499998,
+    "timestamp": 1527834020,
+    "tx_count": 1
+  }
+]
+```
+
 ### daemon.getBlock(options)
 
 Returns information on a single block
