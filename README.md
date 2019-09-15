@@ -3113,12 +3113,12 @@ Note that every parameters sans destinations is optional.
 |Argument|Mandatory|Description|Format|
 |---|---|---|---|
 |destinations|Yes|Array of public addresses to send transaction to.|array|
-|mixin|No|What mixin to use in the transaction.|array|
-|fee|No|Fee to use for the transaction.|array|
+|mixin|No|What mixin to use in the transaction.|number|
+|fee|No|Fee to use for the transaction.|number|
 |sourceAddresses|No|Subwallet addresses to use to fund the payment.|array|
 |paymentId|No|Payment ID to use in the transaction.|array|
 |changeAddress|No|Public address to send the change to.|string|
-|unlockTime|No|Amount of time before unlocking the transaction.|uint64_t|
+|unlockTime|No|Amount of time before unlocking the transaction.|number|
 
 #### Example Code
 
