@@ -3116,7 +3116,7 @@ Note that every parameters sans destinations is optional.
 |mixin|No|What mixin to use in the transaction.|number|
 |fee|No|Fee to use for the transaction.|number|
 |sourceAddresses|No|Subwallet addresses to use to fund the payment.|array|
-|paymentId|No|Payment ID to use in the transaction.|array|
+|paymentId|No|Payment ID to use in the transaction.|string|
 |changeAddress|No|Public address to send the change to.|string|
 |unlockTime|No|Amount of time before unlocking the transaction.|number|
 
