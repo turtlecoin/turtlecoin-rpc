@@ -3,73 +3,56 @@
 // Please see the included LICENSE file for more information.
 
 import * as assert from 'assert';
-import {after, before, describe, it} from 'mocha';
-import {TurtleCoind, WalletAPI, WalletAPIInterfaces} from '../src/index';
+import { after, before, describe, it } from 'mocha';
+import { TurtleCoind, WalletAPI, WalletAPIInterfaces } from '../src';
 
-describe('TurtleCoind', function() {
+describe('TurtleCoind', function () {
     this.timeout(10000);
 
     const server = new TurtleCoind('localhost');
 
-    it('block()', async () => {
+    it('block({hash})', async () => {
         const hash = '7fb97df81221dd1366051b2d0bc7f49c66c22ac4431d879c895b06d66ef66f4c';
+        const prevHash = '0000000000000000000000000000000000000000000000000000000000000000';
         const block = await server.block(hash);
         assert(block.hash === hash);
+        assert(block.prevHash === prevHash);
+    });
+
+    it('block({height})', async () => {
+        const hash = '7fb97df81221dd1366051b2d0bc7f49c66c22ac4431d879c895b06d66ef66f4c';
+        const prevHash = '0000000000000000000000000000000000000000000000000000000000000000';
+        const block = await server.block(0);
+        assert(block.hash === hash);
+        assert(block.prevHash === prevHash);
     });
 
     it('blockCount()', () => {
         return server.blockCount();
     });
-
-    it('blockHeaderByHash()', async () => {
-        const hash = '7fb97df81221dd1366051b2d0bc7f49c66c22ac4431d879c895b06d66ef66f4c';
-        const prevHash = '0000000000000000000000000000000000000000000000000000000000000000';
-        const header = await server.blockHeaderByHash(hash);
-        assert(header.prev_hash === prevHash);
-    });
-
-    it('blockHeaderByHeight()', async () => {
-        const prevHash = '0000000000000000000000000000000000000000000000000000000000000000';
-        const header = await server.blockHeaderByHeight(0);
-        assert(header.prev_hash === prevHash);
-    });
-
-    it('blockShortheaders()', async () => {
-        const headers = await server.blockShortHeaders(100);
+    it('blockHeaders()', async () => {
+        const headers = await server.blockHeaders(100);
         assert(headers.length === 31);
     });
 
     it('blockTemplate()', async () => {
-        const wallet = 'TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn77'
-            + '83RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ';
+        const wallet = 'TRTLv1pacKFJk9QgSmzk2LJWn14JGmTKzReFLz1RgY3K9Ryn77' +
+            '83RDT2TretzfYdck5GMCGzXTuwKfePWQYViNs4avKpnUbrwfQ';
         const reserve = 8;
         const template = await server.blockTemplate(wallet, reserve);
-        assert(template.status === 'OK');
+        assert(template.difficulty > 0);
     });
 
-    it('blocksDetailed()', async () => {
-        const blocks = await server.blocksDetailed(0, [], 10);
-        assert(blocks.status === 'OK' && blocks.blocks.length === 10);
+    it('fee()', async () => {
+        const fee = await server.fee();
+
+        assert(fee);
     });
 
-    it('blocksLite()', async () => {
-        const blocks = await server.blocksLite([], 0);
-        assert(blocks.status === 'OK' && blocks.items.length === 100);
-    });
+    it('indexes()', async () => {
+        const indexes = await server.indexes(0, 10);
 
-    it('fee()', () => {
-        return server.fee();
-    });
-
-    it('globalIndexes()', async () => {
-        const hash = '0d1c0f28b5f5eaa6a21c110eed1339ac9a9eb6a1689d8c31c51a011983069e9b';
-        const indexes = await server.globalIndexes(hash);
-        assert(indexes.length === 1 && indexes[0] === 1);
-    });
-
-    it('globalIndexesForRange()', async () => {
-        const indexes = await server.globalIndexesForRange(0, 10);
-        assert(indexes.length === 10);
+        assert(indexes.length === 11);
     });
 
     it('height()', () => {
@@ -80,8 +63,8 @@ describe('TurtleCoind', function() {
         return server.info();
     });
 
-    it('lastBlockHeader()', async () => {
-        const header = await server.lastBlockHeader();
+    it('lastBlock()', async () => {
+        const header = await server.lastBlock();
         assert(header.depth === 0);
     });
 
@@ -89,61 +72,61 @@ describe('TurtleCoind', function() {
         return server.peers();
     });
 
-    it('poolChanges()', async () => {
+    it('transactionPoolChanges()', async () => {
         const hash = 'ea531b1af3da7dc71a7f7a304076e74b526655bc2daf83d9b5d69f1bc4555af0';
-        const changes = await server.poolChanges(hash, []);
-        assert(!changes.isTailBlockActual);
+        const changes = await server.transactionPoolChanges(hash, []);
+        assert(!changes.synced);
     });
 
-    it('randomOutputs()', async () => {
-        const random = await server.randomOutputs([1, 2, 3], 3);
-        assert(random.outs.length === 3);
-        for (const rnd of random.outs) {
-            assert(rnd.outs.length === 3);
+    it('randomIndexes()', async () => {
+        const random = await server.randomIndexes([1, 2, 3], 3);
+        assert(random.length === 3);
+        for (const rnd of random) {
+            assert(rnd.outputs.length === 3);
         }
     });
 
-    it('rawBlocks()', async () => {
-        const blocks = await server.rawBlocks(
+    it('rawSync()', async () => {
+        const sync = await server.rawSync(
+            undefined,
             0,
-            0,
-            [],
+            undefined,
             true,
-            10,
+            10
         );
-        assert(blocks.items.length === 10);
+        assert(sync.blocks.length === 10);
     });
 
     it('sendRawTransaction()', async () => {
-        const txn = '010001026404d48008fff717d2872294b71e51b8304ed711c0fe240a2614610cc0380a5d0b8b13e2652e6c062fbb'
-            + '056b7f1f015a027b2288942d52247932af36dc1d722da61f296089015b83d591f5a71afafa948021015af0c037fcfe8'
-            + 'c50f1e11876c98338fe664c85bc11cd696bc04c988b5669deda96a4299dd9cb471795d079da82e25827badcd79400b3'
-            + '94e7c51b67c662d0fc03204a3967aa2bc90708c97cc0370597ad9e154dc7d418ab71b981f8bb805cc603bde2fcb1025'
-            + 'bb8b7a04e5e5168cebd724c920fcbb3399210543db9cf7ef9440fa0f11f5a2ea908da1f60f359ab2af2f79783b21113'
-            + '62260fc8d562b268dd350dcb07941d179f34cfd43a3b8d689db6ff453fce4e987a537a528a80f011217e0460434e52d'
-            + 'a411e8760b10c34a3b63236eb966273a26a3ad3fc7a863a3b6bc508b16cc7763b28743f4ba5a9711e95eeb95762aa6e'
-            + '9c79725170d42fc8968dcd051d2eef49e1726db2fd92e76c47455efff52fc0b473899acaff169316f9654802';
+        const txn = '010001026404d48008fff717d2872294b71e51b8304ed711c0fe240a2614610cc0380a5d0b8b13e2652e6c062fbb' +
+            '056b7f1f015a027b2288942d52247932af36dc1d722da61f296089015b83d591f5a71afafa948021015af0c037fcfe8' +
+            'c50f1e11876c98338fe664c85bc11cd696bc04c988b5669deda96a4299dd9cb471795d079da82e25827badcd79400b3' +
+            '94e7c51b67c662d0fc03204a3967aa2bc90708c97cc0370597ad9e154dc7d418ab71b981f8bb805cc603bde2fcb1025' +
+            'bb8b7a04e5e5168cebd724c920fcbb3399210543db9cf7ef9440fa0f11f5a2ea908da1f60f359ab2af2f79783b21113' +
+            '62260fc8d562b268dd350dcb07941d179f34cfd43a3b8d689db6ff453fce4e987a537a528a80f011217e0460434e52d' +
+            'a411e8760b10c34a3b63236eb966273a26a3ad3fc7a863a3b6bc508b16cc7763b28743f4ba5a9711e95eeb95762aa6e' +
+            '9c79725170d42fc8968dcd051d2eef49e1726db2fd92e76c47455efff52fc0b473899acaff169316f9654802';
 
         /* We know this test will fail as this txn is no longer valid */
-        return server.sendRawTransaction(txn)
+        return server.submitTransaction(txn)
             .then(() => assert(false))
             .catch(() => assert(true));
     });
 
     it('submitBlock()', async () => {
-        const block = '0400850d6b0dcd9aee8adc27ddf2c0102cc7985d006bd7ca057d09313c6afe9f34580000829de8e10500000000'
-            + '00000000000000000000000000000000000000000000000000000000000000000100000000230321000000000000000'
-            + '000000000000000000000000000000000000000000000000000018ee14501ffe6e045050202e9567859b844305a8c33'
-            + 'd36d7a31ac29a78b233dc00de39878c77e4b639d23b4f403024f44e842ba4d0aaade34ac03940da2dc6f8ae146f6948'
-            + 'a8b240db947a661f3c280f104026d11bea76123efc53ab8e233252486c6bfb1cd499823d383a22711405cc6346580ea'
-            + '30027b64b9e6c9922387a1343d22c8040ae4a1b787ed7f3bfbeac92ba1b8356175fe80897a023cfa03f1fc506eb7971'
-            + '16baa22f4d63425f2137fb9c1e3116f1ab5b6e0a6d54aeb01011f8b6c0e5635716d6446867cdc4dba0006989ec5440e'
-            + 'f4804a44727bf713a2c702c800000000000000000000000000000000000000000000000000000000000000000000000'
-            + '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
-            + '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
-            + '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
-            + '0000000000000000000000000000000000000000000002baa8def39990827a71965b84d61be5d7db6a6270428d8e48d'
-            + '8eb8015d43f65f0e189e52e3fe9f0da5b04fed64effc070e1b97e32cb5445a4434a70eda8c6572f';
+        const block = '0400850d6b0dcd9aee8adc27ddf2c0102cc7985d006bd7ca057d09313c6afe9f34580000829de8e10500000000' +
+            '00000000000000000000000000000000000000000000000000000000000000000100000000230321000000000000000' +
+            '000000000000000000000000000000000000000000000000000018ee14501ffe6e045050202e9567859b844305a8c33' +
+            'd36d7a31ac29a78b233dc00de39878c77e4b639d23b4f403024f44e842ba4d0aaade34ac03940da2dc6f8ae146f6948' +
+            'a8b240db947a661f3c280f104026d11bea76123efc53ab8e233252486c6bfb1cd499823d383a22711405cc6346580ea' +
+            '30027b64b9e6c9922387a1343d22c8040ae4a1b787ed7f3bfbeac92ba1b8356175fe80897a023cfa03f1fc506eb7971' +
+            '16baa22f4d63425f2137fb9c1e3116f1ab5b6e0a6d54aeb01011f8b6c0e5635716d6446867cdc4dba0006989ec5440e' +
+            'f4804a44727bf713a2c702c800000000000000000000000000000000000000000000000000000000000000000000000' +
+            '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' +
+            '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' +
+            '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' +
+            '0000000000000000000000000000000000000000000002baa8def39990827a71965b84d61be5d7db6a6270428d8e48d' +
+            '8eb8015d43f65f0e189e52e3fe9f0da5b04fed64effc070e1b97e32cb5445a4434a70eda8c6572f';
 
         /* We know this test will fail as this block won't work */
         return server.submitBlock(block)
@@ -154,7 +137,11 @@ describe('TurtleCoind', function() {
     it('transaction()', async () => {
         const hash = 'bdcbc8162dc1949793c1c6d0656ac60a6e5a3c505969b18bdfa10360d1c2909d';
         const txn = await server.transaction(hash);
-        assert(txn.status === 'OK');
+
+        const expectedBlock = 'ea531b1af3da7dc71a7f7a304076e74b526655bc2daf83d9b5d69f1bc4555af0';
+        const expectedPublicKey = '7d812f35cfff8bc6b5d118944d6476c73495f5c2de3f6a923f3510661646ac9d';
+
+        assert(txn.block.hash === expectedBlock && txn.meta.publicKey === expectedPublicKey);
     });
 
     it('transactionPool()', () => {
@@ -162,20 +149,20 @@ describe('TurtleCoind', function() {
     });
 
     it('transactionStatus()', async () => {
-        const status = await server.transactionStatus([
+        const status = await server.transactionsStatus([
             'bdcbc8162dc1949793c1c6d0656ac60a6e5a3c505969b18bdfa10360d1c2909d',
-            'bdcbc8162dc1949793c1c6d0656ac60a6e5a3c505969b18bdfa10360d1c2909c',
+            'bdcbc8162dc1949793c1c6d0656ac60a6e5a3c505969b18bdfa10360d1c2909c'
         ]);
-        assert(status.transactionsUnknown.length === 1 && status.transactionsInBlock.length === 1);
+        assert(status.notFound.length === 1 && status.inBlock.length === 1);
     });
 
-    it('walletSyncData()', async () => {
-        const sync = await server.walletSyncData();
-        assert(sync.status === 'OK' && !sync.synced);
+    it('sync()', async () => {
+        const sync = await server.sync();
+        assert(sync.blocks.length !== 0 && !sync.synced);
     });
 });
 
-describe('WalletAPI', async function() {
+describe('WalletAPI', async function () {
     this.timeout(30000);
 
     const randomFilename = () => (Math.random() * 100000000).toString() + '.wallet';
@@ -187,7 +174,7 @@ describe('WalletAPI', async function() {
 
     describe('New Wallet', () => {
         before('create()', async () => {
-            return server.create(newFilename, password);
+            return await server.create(newFilename, password);
         });
 
         after('close()', async () => {
@@ -220,14 +207,14 @@ describe('WalletAPI', async function() {
         });
 
         it('createIntegratedAddress()', async () => {
-            const address = 'TRTLuwuGiuyWSkTTKQy8jGj4Dfr5typGJFoaHKzKGdu79S79x1Mk5biMnWUFXRtr9K'
-                + 'FmDAQxUuh9j3WretzXaZzGVPyzRQSM8Wu';
+            const address = 'TRTLuwuGiuyWSkTTKQy8jGj4Dfr5typGJFoaHKzKGdu79S79x1Mk5biMnWUFXRtr9K' +
+                'FmDAQxUuh9j3WretzXaZzGVPyzRQSM8Wu';
             const paymentId = '1DE6276D400098659A6B065D6422959FB15C83A260D32E59095987E91FF01B05';
             const response = await server.createIntegratedAddress(address, paymentId);
 
-            const expected = 'TRTLuxjg8MT9Q9z9a1oMTmAa6thQCcjQV94iS9Cmu3tVAZzKnMkf5iAAQDKkcBhon'
-                + 'A9QgkMdUZe6tAQN9gQUkhqh9EsSQLNDoX9WSkTTKQy8jGj4Dfr5typGJFoaHKzKGdu79S79x1Mk5biMn'
-                + 'WUFXRtr9KFmDAQxUuh9j3WretzXaZzGVPyzRUXFtwc';
+            const expected = 'TRTLuxjg8MT9Q9z9a1oMTmAa6thQCcjQV94iS9Cmu3tVAZzKnMkf5iAAQDKkcBhon' +
+                'A9QgkMdUZe6tAQN9gQUkhqh9EsSQLNDoX9WSkTTKQy8jGj4Dfr5typGJFoaHKzKGdu79S79x1Mk5biMn' +
+                'WUFXRtr9KFmDAQxUuh9j3WretzXaZzGVPyzRUXFtwc';
 
             assert(response === expected);
         });
@@ -274,7 +261,7 @@ describe('WalletAPI', async function() {
         it('newDestination()', () => {
             const dst = server.newDestination(
                 'TRTLuwuGiuyWSkTTKQy8jGj4Dfr5typGJFoaHKzKGdu79S79x1Mk5biMnWUFXRtr9KFmDAQxUuh9j3WretzXaZzGVPyzRQSM8Wu',
-                1.15,
+                1.15
             );
             assert(dst.amount === 115);
         });
@@ -341,15 +328,15 @@ describe('WalletAPI', async function() {
         });
 
         it('validateAddress()', async () => {
-            const address = 'TRTLuxQ2jXVeGrQNKFgAvGc4GifYEcrLC8UWEebLMjfNDt7JXZhAyzChdAthLTZHWYPKRgeimfJqzHBmv'
-                + 'hwUzYgPAHML6SRXjoz';
+            const address = 'TRTLuxQ2jXVeGrQNKFgAvGc4GifYEcrLC8UWEebLMjfNDt7JXZhAyzChdAthLTZHWYPKRgeimfJqzHBmv' +
+                'hwUzYgPAHML6SRXjoz';
             const response = await server.validateAddress(address);
             assert(response.actualAddress === address);
         });
 
         it('fail validateAddress()', async () => {
-            const address = 'TRTLuxQ2jXVeGrQNKFgAvGc4GifYEcrLC8UWEebLMjfNDt7JXZhAyzChdAthLTZHWYPKRgeimfJqzHBmv'
-                + 'hwUzYgPAHML6SRXjoq';
+            const address = 'TRTLuxQ2jXVeGrQNKFgAvGc4GifYEcrLC8UWEebLMjfNDt7JXZhAyzChdAthLTZHWYPKRgeimfJqzHBmv' +
+                'hwUzYgPAHML6SRXjoq';
 
             /* We expect this test to fail as this address is invalid */
             return server.validateAddress(address)
@@ -372,7 +359,7 @@ describe('WalletAPI', async function() {
                     randomFilename(),
                     password,
                     '84271126f661ae8cdb06de981d69fd7fc7b14aaa9af53766440836b5c52da900',
-                    'dd8d88c0d391db824190fc83dfb516d35ea1d7ec8ce0e7b6bf48566fcc7d1a0f',
+                    'dd8d88c0d391db824190fc83dfb516d35ea1d7ec8ce0e7b6bf48566fcc7d1a0f'
                 );
             });
         });
@@ -389,8 +376,8 @@ describe('WalletAPI', async function() {
                 return server.importSeed(
                     randomFilename(),
                     password,
-                    'five aphid spiders obnoxious wolf library love anxiety nephew mumble apex tufts '
-                    + 'ladder hyper gasp hobby android segments sneeze flying royal betting vixen abnormal obnoxious',
+                    'five aphid spiders obnoxious wolf library love anxiety nephew mumble apex tufts ' +
+                    'ladder hyper gasp hobby android segments sneeze flying royal betting vixen abnormal obnoxious'
                 );
             });
         });
@@ -405,10 +392,10 @@ describe('WalletAPI', async function() {
 
             it('importViewOnly', async () => {
                 return server.importViewOnly(
-                  randomFilename(),
-                  password,
-                  '84271126f661ae8cdb06de981d69fd7fc7b14aaa9af53766440836b5c52da900',
-                    'TRTLuxQ2jXVeGrQNKFgAvGc4GifYEcrLC8UWEebLMjfNDt7JXZhAyzChdAthLTZHWYPKRgeimfJqzHBmvhwUzYgPAHML6SRXjoz',
+                    randomFilename(),
+                    password,
+                    '84271126f661ae8cdb06de981d69fd7fc7b14aaa9af53766440836b5c52da900',
+                    'TRTLuxQ2jXVeGrQNKFgAvGc4GifYEcrLC8UWEebLMjfNDt7JXZhAyzChdAthLTZHWYPKRgeimfJqzHBmvhwUzYgPAHML6SRXjoz'
                 );
             });
 

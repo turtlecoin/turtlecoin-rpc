@@ -2,406 +2,304 @@
 //
 // Please see the included LICENSE file for more information.
 
-import {HTTPClient} from './HTTPClient';
-import {TurtleCoindInterfaces} from './Types/TurtleCoind';
+import * as BigInteger from 'big-integer';
+import { HTTPClient } from './HTTPClient';
+import { TurtleCoindInterfaces } from './Types/TurtleCoind';
 
+/**
+ * Interfaces with the TurltleCoind node API
+ */
 export class TurtleCoind extends HTTPClient {
     /**
-     * Initializes a new TurtleCoind interface
-     * @param host the address of the daemon
-     * @param port the port of the daemon
-     * @param timeout the timeout to use during RPC calls
-     * @param ssl whether the daemon uses SSL (HTTPS) or not
-     * @param userAgent the user agent string to use with requests
-     * @param keepAlive whether the underlying HTTP(s) connection should be kept alive and reused
+     * Retrieves the node fee information
      */
-    constructor(host?: string,
-                port?: number,
-                timeout?: number,
-                ssl?: boolean,
-                userAgent?: string,
-                keepAlive?: boolean,
-    ) {
-        super(host, port, timeout, ssl, userAgent, keepAlive);
-    }
+    async fee (): Promise<TurtleCoindInterfaces.IFee> {
+        const response = await this.get('fee');
 
-    /**
-     * Retrieves details on a single block by hash
-     * @param hash the hash of the block to retrieve
-     */
-    public async block(hash: string): Promise<TurtleCoindInterfaces.IBlockSummary> {
-        const response = await this.rpcPost('f_block_json', {hash});
-
-        return response.block;
-    }
-
-    /**
-     * Gets the daemon current block count
-     */
-    public async blockCount(): Promise<number> {
-        const response = await this.rpcPost('getblockcount');
-
-        return response.count;
-    }
-
-    /**
-     * Retrieves the block header information by hash
-     * @param hash the hash of the block to retrieve the header for
-     */
-    public async blockHeaderByHash(hash: string): Promise<TurtleCoindInterfaces.IBlockHeader> {
-        const response = await this.rpcPost('getblockheaderbyhash', {hash});
-
-        return response.block_header;
-    }
-
-    /**
-     * Retrieves the block header by the height
-     * @param height the height of the block to retrieve the header for
-     */
-    public async blockHeaderByHeight(height: number): Promise<TurtleCoindInterfaces.IBlockHeader> {
-        const response = await this.rpcPost('getblockheaderbyheight', {height});
-
-        return response.block_header;
-    }
-
-    /**
-     * Retrieves up to 100 blocks. If block hashes are given, it will return beginning from the height of the
-     * first hash it finds, plus one. However, if timestamp is given, and this value is higher than any found
-     * in the array of blockHashes, it will start returning blocks from that height instead. The blockHashes
-     * array should be given the highest block height hashes first, then in descending order by height.
-     * First 10 block hashes go sequential, next in pow(2,n) offset (ie. 2, 4, 8, 16, 32, 64...), and the
-     * last block hash is always the genesis block.
-     * Typical usage: specify a start timestamp initially, and from then on, also provide the returned block
-     * hashes as mentioned above.
-     * @param timestamp the timestamp to start from
-     * @param blockHashes the array of block hashes
-     * @param blockCount the number of blocks to return
-     */
-    public async blocksDetailed(
-        timestamp: number = 0,
-        blockHashes: string[] = [],
-        blockCount: number = 100
-    ): Promise<TurtleCoindInterfaces.IBlocksDetailedResponse> {
-        return this.post('queryblocksdetailed', {
-            blockIds: blockHashes,
-            timestamp: timestamp,
-            blockCount: blockCount
-        })
-    }
-
-    /**
-     * Retrieves abbreviated block information for the last 31 blocks before the specified height (inclusive)
-     * @param height the height of the block to retrieve
-     */
-    public async blockShortHeaders(height: number): Promise<TurtleCoindInterfaces.IBlockShortHeader[]> {
-        const response = await this.rpcPost('f_blocks_list_json', {height});
-
-        return response.blocks;
-    }
-
-    /**
-     * Retrieves up to 100 blocks. If block hashes are given, it will return beginning from the height of the
-     * first hash it finds, plus one. However, if timestamp is given, and this value is higher than any found
-     * in the array of blockHashes, it will start returning blocks from that height instead. The blockHashes
-     * array should be given the highest block height hashes first, then in descending order by height.
-     * First 10 block hashes go sequential, next in pow(2,n) offset (ie. 2, 4, 8, 16, 32, 64...), and the
-     * last block hash is always the genesis block.
-     * Typical usage: specify a start timestamp initially, and from then on, also provide the returned block
-     * hashes as mentioned above.
-     * @param blockHashes
-     * @param timestamp
-     */
-    public async blocksLite(
-        blockHashes: string[],
-        timestamp: number = 0,
-    ): Promise<TurtleCoindInterfaces.IBlockLiteResponse> {
-        const response = await this.post('queryblockslite', {
-            blockIds: blockHashes,
-            timestamp: timestamp,
-        });
-
-        const tmp: TurtleCoindInterfaces.IBlockLite[] = [];
-
-        for (const item of response.items) {
-            const transactions: TurtleCoindInterfaces.IBlockLiteTransaction[] = [];
-
-            for (const txn of item['blockShortInfo.txPrefixes']) {
-                transactions.push({
-                    hash: txn['transactionPrefixInfo.txHash'],
-                    prefix: txn['transactionPrefixInfo.txPrefix'],
-                });
-            }
-
-            tmp.push({
-                block: Buffer.from(item['blockShortInfo.block']).toString('hex'),
-                hash: item['blockShortInfo.blockId'],
-                transactions: transactions,
-            });
-        }
-
-        response.items = tmp;
+        response.amount = BigInteger(response.amount);
 
         return response;
     }
 
     /**
-     * Retrieves a block template using the supplied parameters for the tip of the known chain
-     * @param walletAddress the wallet address to receive the coinbase transaction outputs
-     * @param reserveSize the amount of space in the blocktemplate to reserve for additional data
+     * Retrieves the node height information
      */
-    public async blockTemplate(
-        walletAddress: string,
-        reserveSize: number = 8,
-    ): Promise<TurtleCoindInterfaces.IBlockTemplate> {
-        return this.rpcPost('getblocktemplate', {
-          reserve_size: reserveSize,
-          wallet_address: walletAddress,
-        });
-    }
-
-    /**
-     * Retrieves the node donation fee information for the given node
-     */
-    public async fee(): Promise<TurtleCoindInterfaces.IFeeResponse> {
-        return this.get('fee');
-    }
-
-    /**
-     * Retrieves the global output indexes of the given transaction
-     * @param transactionHash the hash of the transaction to retrieve
-     */
-    public async globalIndexes(transactionHash: string): Promise<number[]> {
-        const response = await this.post('get_o_indexes', {
-            txid: transactionHash,
-        });
-
-        if (response.status.toLowerCase() !== 'ok') { throw new Error('Transaction not found'); }
-
-        return response.o_indexes;
-    }
-
-    /**
-     * Retrieves the global indexes for any transactions in the range [startHeight .. endHeight]. Generally, you
-     * only want the global index for a specific transaction, however, this reveals that you probably are the
-     * recipient of this transaction. By supplying a range of blocks, you can obfusticate which transaction
-     * you are enquiring about.
-     * @param startHeight the height to begin returning indices from
-     * @param endHeight the height to end returning indices from
-     */
-    public async globalIndexesForRange(
-        startHeight: number,
-        endHeight: number,
-    ): Promise<TurtleCoindInterfaces.IGlobalIndexesResponse[]> {
-        const response = await this.post('get_global_indexes_for_range', {startHeight, endHeight});
-
-        if (!response.status || !response.indexes) { throw new Error('Missing indexes or status key'); }
-        if (response.status.toLowerCase() !== 'ok') { throw new Error('Status is not OK'); }
-
-        return response.indexes;
-    }
-
-    /**
-     * Retrieves the current daemon height statistics
-     */
-    public async height(): Promise<TurtleCoindInterfaces.IHeightResponse> {
+    async height (): Promise<TurtleCoindInterfaces.IHeight> {
         return this.get('height');
     }
 
     /**
-     * Retrieves the current daemon information statistics
+     * Retrieves the node information
      */
-    public async info(): Promise<TurtleCoindInterfaces.IInfoResponse> {
-        return this.get('info');
-    }
+    async info (): Promise<TurtleCoindInterfaces.IInfo> {
+        const response = await this.get('info');
 
-    /**
-     * Retrieves the last block header information
-     */
-    public async lastBlockHeader(): Promise<TurtleCoindInterfaces.IBlockHeader> {
-        const response = await this.rpcPost('getlastblockheader');
+        response.startTime = new Date((response.startTime || response.start_time) * 1000);
 
-        return response.block_header;
-    }
+        const parse = (elem: string): TurtleCoindInterfaces.IVersion => {
+            const [major, minor, patch] = elem.split('.')
+                .map(elem => parseInt(elem, 10));
 
-    /**
-     * Retrieves information regarding the daemon's peerlist
-     */
-    public async peers(): Promise<TurtleCoindInterfaces.IPeersResponse> {
-        return this.get('peers');
-    }
-
-    /**
-     * Retrieves updates regarding the transaction mempool
-     * @param tailBlockHash the last block hash that we know about
-     * @param knownTransactionHashes an array of the transaction hashes we last knew were in the mempool
-     */
-    public async poolChanges(
-        tailBlockHash: string,
-        knownTransactionHashes: string[] = []
-    ): Promise<TurtleCoindInterfaces.IPoolChanges> {
-        const body: any = {
-            tailBlockId: tailBlockHash
+            return { major, minor, patch };
         };
 
-        if (knownTransactionHashes) body.knownTxsIds = knownTransactionHashes;
+        response.version = parse(response.version);
 
-        const response = await this.post('get_pool_changes_lite', body);
+        return response;
+    }
 
-        const tmp: TurtleCoindInterfaces.IBlockLiteTransaction[] = [];
+    /**
+     * Retrieves the node peer information
+     */
+    async peers (): Promise<TurtleCoindInterfaces.IPeers> {
+        const response = await this.get('peers');
 
-        for (const tx of response.addedTxs) {
-            tmp.push({
-                hash: tx['transactionPrefixInfo.txHash'],
-                prefix: tx['transactionPrefixInfo.txPrefix'],
-            });
+        const parse = (elem: string): { host: string, port: number } => {
+            const [host, port] = elem.split(':');
+
+            return { host, port: parseInt(port, 10) };
+        };
+
+        response.greyPeers = response.greyPeers.map((elem: string) => parse(elem));
+
+        response.peers = response.peers.map((elem: string) => parse(elem));
+
+        return response;
+    }
+
+    /**
+     * Retrieves the number of blocks the node has in its chain
+     */
+    async blockCount (): Promise<number> {
+        return this.get('block/count');
+    }
+
+    /**
+     * Retrieves the block information for the specified block
+     * @param block the block height or hash
+     */
+    async block (block: string | number): Promise<TurtleCoindInterfaces.IBlock> {
+        const response = await this.get('block/' + block);
+
+        response.alreadyGeneratedCoins = BigInteger(response.alreadyGeneratedCoins);
+
+        response.timestamp = new Date(response.timestamp * 1000);
+
+        return response;
+    }
+
+    /**
+     * Retrieves the block information for the last block available
+     */
+    async lastBlock (): Promise<TurtleCoindInterfaces.IBlock> {
+        const response = await this.get('block/last');
+
+        response.alreadyGeneratedCoins = BigInteger(response.alreadyGeneratedCoins);
+
+        response.timestamp = new Date(response.timestamp * 1000);
+
+        return response;
+    }
+
+    /**
+     * Retrieves the block information for the last 30 blocks up to the current height
+     * @param height the height to stop at
+     */
+    async blockHeaders (height: number): Promise<TurtleCoindInterfaces.IBlock[]> {
+        const response: any[] = await this.get('block/headers/' + height);
+
+        for (const item of response) {
+            item.alreadyGeneratedCoins = BigInteger(item.alreadyGeneratedCoins);
+
+            item.timestamp = new Date(item.timestamp * 1000);
         }
 
-        response.addedTxs = tmp;
-
         return response;
     }
 
     /**
-     * Retrieves random outputs from the chain for mixing purposes during the creation of a new transaction
-     * @param amounts an array of the amounts for which we need random outputs
-     * @param mixin the number of random outputs we need for each amount specified
+     * Retrieves the RawBlock information from the node for the specified block
+     * @param block the block height or hash
      */
-    public async randomOutputs(
-        amounts: number[],
-        mixin: number = 1
-    ): Promise<TurtleCoindInterfaces.IRandomOutputsResponse> {
-        return this.post('getrandom_outs', {
-            amounts: amounts,
-            outs_count: mixin
-        })
+    async rawBlock (block: string | number): Promise<TurtleCoindInterfaces.IRawBlock> {
+        return this.get('block/' + block + '/raw');
     }
 
     /**
-     * Retrieves the raw hex representation of each block and the transactions in the blocks versus returning
-     * JSON or other encoded versions of the same.
-     *
-     * Retrieves up to 100 blocks. If block hash checkpoints are given, it will return beginning from the height of
-     * the first hash it finds, plus one. However, if startHeight or startTimestamp is given, and this value is
-     * higher than the block hash checkpoints, it will start returning from that height instead. The block hash
-     * checkpoints should be given with the highest block height hashes first.
-     * Typical usage: specify a start height/timestamp initially, and from then on, also provide the returned
-     * block hashes.
-     * @param startHeight the height to start returning blocks from
-     * @param startTimestamp the timestamp to start returning blocks from
-     * @param blockHashCheckpoints the block hash checkpoints
-     * @param skipCoinbaseTransactions whether to skip returning blocks with only coinbase transactions
-     * @param blockCount the number of blocks to retrieve
+     * Retrieves a mining block template using the specified address and reserve size
+     * @param address the wallet address that will receive the coinbase outputs
+     * @param reserveSize the amount of data to reserve in the miner transaction
      */
-    public async rawBlocks(
-        startHeight: number = 0,
-        startTimestamp: number = 0,
-        blockHashCheckpoints: string[] = [],
-        skipCoinbaseTransactions: boolean = false,
-        blockCount: number = 100
-    ): Promise<TurtleCoindInterfaces.IRawBlocksResponse> {
-        return this.post('getrawblocks', {
-            startHeight: startHeight,
-            startTimestamp: startTimestamp,
-            blockHashCheckpoints: blockHashCheckpoints,
-            skipCoinbaseTransactions: skipCoinbaseTransactions,
-            blockCount: blockCount
-        });
+    async blockTemplate (
+        address: string,
+        reserveSize = 6
+    ): Promise<TurtleCoindInterfaces.IBlockTemplate> {
+        return this.post('block/template', { address, reserveSize });
     }
 
     /**
-     * Submits a raw transaction to the daemon for processing relaying to the network
+     * Submits a block to the node for processing
+     * @param block the hex representation of the block
+     */
+    async submitBlock (block: string): Promise<string> {
+        return this.post('block', block);
+    }
+
+    /**
+     * Submits a transaction to the node for processing
      * @param transaction the hex representation of the transaction
      */
-    public async sendRawTransaction(
-        transaction: string,
-    ): Promise<TurtleCoindInterfaces.ISendRawTransactionResponse> {
-        return this.post('sendrawtransaction', {tx_as_hex: transaction});
+    async submitTransaction (transaction: string): Promise<string> {
+        return this.post('transaction', transaction);
     }
 
     /**
-     * Submits a raw block to the daemon for processing and relaying to the network
-     * @param blockBlob the hex prepresentation of the block
+     * Retrieves the transaction information for the specified transaction
+     * @param hash the transaction hash
      */
-    public async submitBlock(blockBlob: string): Promise<string> {
-        const response = await this.rpcPost('submitblock', [blockBlob]);
+    async transaction (hash: string): Promise<TurtleCoindInterfaces.ITransaction> {
+        const response = await this.get('transaction/' + hash);
 
-        return response.status;
-    }
+        response.block.alreadyGeneratedCoins = BigInteger(response.block.alreadyGeneratedCoins);
 
-    /**
-     * Retrieves a single transaction's information
-     * @param hash the hash of the transaction to retrieve
-     */
-    public async transaction(hash: string): Promise<TurtleCoindInterfaces.ITransactionResponse> {
-        const response = await this.rpcPost('f_transaction_json', {hash});
+        response.block.timestamp = new Date(response.block.timestamp * 1000);
 
-        if (response.tx && response.tx['']) { delete response.tx['']; }
+        response.prefix.unlockTime = BigInteger(response.prefix.unlockTime);
 
         return response;
     }
 
     /**
-     * Retrieves summary information of the transactions currently in the mempool
+     * Retrieves the RawTransaction from the node for the specified transaction
+     * @param hash the transaction hash
      */
-    public async transactionPool(): Promise<TurtleCoindInterfaces.ITransactionSummary[]> {
-        const response = await this.rpcPost('f_on_transactions_pool_json');
-
-        return response.transactions;
+    async rawTransaction (hash: string): Promise<string> {
+        return this.get('transaction/' + hash + '/raw');
     }
 
     /**
-     * Retrieves the status of the transaction hashes provided
-     * @param transactionHashes an array of transaction hashes to check
+     * Retrieves the transaction summary information for the transactions currently
+     * in the memory pool
      */
-    public async transactionStatus(
-        transactionHashes: string[],
-    ): Promise<TurtleCoindInterfaces.ITransactionStatusResponse> {
-        const response = await this.post('get_transactions_status', {transactionHashes});
-
-        if (!response.status
-            || !response.transactionsInPool
-            || !response.transactionsInBlock
-            || !response.transactionsUnknown) { throw new Error('Missing status of transactions key'); }
-
-        if (response.status.toLowerCase() !== 'ok') { throw new Error('Status is not ok'); }
-
-        return {
-            transactionsInPool: response.transactionsInPool,
-            transactionsInBlock: response.transactionsInBlock,
-            transactionsUnknown: response.transactionsUnknown,
-        };
-
+    async transactionPool (): Promise<TurtleCoindInterfaces.TransactionSummary[]> {
+        return this.get('transaction/pool');
     }
 
     /**
-     * The only the data necessary for wallet syncing purposes
-     *
-     * Retrieves up to 100 blocks. If block hash checkpoints are given, it will return beginning from the height of
-     * the first hash it finds, plus one. However, if startHeight or startTimestamp is given, and this value is
-     * higher than the block hash checkpoints, it will start returning from that height instead. The block hash
-     * checkpoints should be given with the highest block height hashes first.
-     * Typical usage: specify a start height/timestamp initially, and from then on, also provide the returned
-     * block hashes.
-     * @param startHeight the height to start returning blocks from
-     * @param startTimestamp the timestamp to start returning blocks from
-     * @param blockHashCheckpoints the block hash checkpoints
-     * @param skipCoinbaseTransactions whether to skip returning blocks with only coinbase transactions
+     * Retrieves the RawTransactions currently in the memory pool
      */
-    public async walletSyncData(
-        startHeight: number = 0,
-        startTimestamp: number = 0,
-        blockHashCheckpoints: string[] = [],
-        skipCoinbaseTransactions: boolean = false
-    ): Promise<TurtleCoindInterfaces.IWalletSyncData> {
-        const response = await this.post('getwalletsyncdata', {
-            startHeight: startHeight,
-            startTimestamp: startTimestamp,
-            blockHashCheckpoints: blockHashCheckpoints,
-            skipCoinbaseTransactions: skipCoinbaseTransactions
+    async rawTransactionPool (): Promise<string[]> {
+        return this.get('transaction/pool/raw');
+    }
+
+    /**
+     * Gets the transaction memory pool changes given the last known block hash and
+     * the transactions we last knew to be in the memory pool
+     * @param lastKnownBlock the last known block hash
+     * @param transactions an array of transaction hashes we last saw in the memory pool
+     */
+    async transactionPoolChanges (
+        lastKnownBlock: string,
+        transactions: string[]
+    ): Promise<TurtleCoindInterfaces.ITransactionPoolDelta> {
+        return this.post('transaction/pool/delta', { lastKnownBlock, transactions });
+    }
+
+    /**
+     * Retrieves information on where the specified transactions are located
+     * @param transactions an array of transaction hashes
+     */
+    async transactionsStatus (
+        transactions: string[]
+    ): Promise<TurtleCoindInterfaces.ITransactionsStatus> {
+        return this.post('transaction/status', transactions);
+    }
+
+    /**
+     * Retrieves random global indexes typically used for mixing operations for the specified
+     * amounts and for the number requested (if available)
+     * @param amounts an array of amounts for which we need random global indexes
+     * @param count the number of global indexes to return for each amount
+     */
+    async randomIndexes (
+        amounts: number[],
+        count = 3
+    ): Promise<TurtleCoindInterfaces.IRandomOutput[]> {
+        return this.post('indexes/random', { amounts, count });
+    }
+
+    /**
+     * Retrieves the global indexes for all transactions contained within the blocks heights specified (non-inclusive)
+     * @param startHeight the starting block height
+     * @param endHeight the ending block height
+     */
+    async indexes (
+        startHeight: number,
+        endHeight: number
+    ): Promise<TurtleCoindInterfaces.ITransactionIndexes[]> {
+        return this.get('indexes/' + startHeight + '/' + endHeight);
+    }
+
+    /**
+     * Retrieves the information necessary for syncing a wallet (or other utility) against the node
+     * @param checkpoints a list of block hashes that we know about in descending height order
+     * @param height the height to start syncing from
+     * @param timestamp the timestamp to start syncing from
+     * @param skipCoinbaseTransactions whether we should skip blocks that only include coinbase transactions
+     * @param count the number of blocks to return
+     */
+    async sync (
+        checkpoints: string[] = [],
+        height = 0,
+        timestamp = 0,
+        skipCoinbaseTransactions = false,
+        count = 100): Promise<TurtleCoindInterfaces.ISync> {
+        const response = await this.post('sync', {
+            checkpoints,
+            count,
+            height,
+            skipCoinbaseTransactions,
+            timestamp
         });
 
-        if (!response.status || !response.items) throw new Error('Missing items or status key');
-        if (response.status.toLowerCase() !== 'ok') throw new Error('Status is not OK');
+        response.blocks = response.blocks.map((block: TurtleCoindInterfaces.ISyncBlock) => {
+            if (block.coinbaseTX) {
+                block.coinbaseTX.unlockTime = BigInteger(block.coinbaseTX.unlockTime);
+            }
+
+            block.transactions = block.transactions.map(tx => {
+                tx.unlockTime = BigInteger(tx.unlockTime);
+
+                return tx;
+            });
+
+            return block;
+        });
+
+        return response;
+    }
+
+    /**
+     * Retrieves the RawBlocks & RawTransactions for syncing a wallet (or other utility) against the node
+     * @param checkpoints a list of block hashes that we know about in descending height order
+     * @param height the height to start syncing from
+     * @param timestamp the timestamp to start syncing from
+     * @param skipCoinbaseTransactions whether we should skip blocks that only include coinbase transactions
+     * @param count the number of blocks to return
+     */
+    async rawSync (
+        checkpoints: string[] = [],
+        height = 0,
+        timestamp = 0,
+        skipCoinbaseTransactions = false,
+        count = 100): Promise<TurtleCoindInterfaces.IRawSync> {
+        const response = await this.post('sync/raw', {
+            checkpoints,
+            count,
+            height,
+            skipCoinbaseTransactions,
+            timestamp
+        });
 
         return response;
     }

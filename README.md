@@ -24,7 +24,7 @@ v4.0.0+ contains multiple possibly breaking changes to the package as it has bee
 ## Dependencies
 
 * [NodeJS v8.x](https://nodejs.org) >= 8.x
-* [TurtleCoin](https://github.com/turtlecoin/turtlecoin/releases) >= v0.24.0
+* [TurtleCoin](https://github.com/turtlecoin/turtlecoin/releases) >= v1.0.0
 
 ## Installation
 

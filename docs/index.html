@@ -86,7 +86,7 @@
 				</a>
 				<ul>
 					<li><a href="https://nodejs.org">NodeJS v8.x</a> &gt;= 8.x</li>
-					<li><a href="https://github.com/turtlecoin/turtlecoin/releases">TurtleCoin</a> &gt;= v0.24.0</li>
+					<li><a href="https://github.com/turtlecoin/turtlecoin/releases">TurtleCoin</a> &gt;= v1.0.0</li>
 				</ul>
 				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
 					<h2>Installation</h2>
@@ -103,54 +103,54 @@
 				<a href="#turtlecoind" id="turtlecoind" style="color: inherit; text-decoration: none;">
 					<h3>TurtleCoind</h3>
 				</a>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {TurtleCoind} <span class="hljs-keyword">from</span> <span class="hljs-string">'turtlecoin-rpc'</span>;
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {TurtleCoind} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;turtlecoin-rpc&#x27;</span>;
 
 <span class="hljs-keyword">const</span> daemon = <span class="hljs-keyword">new</span> TurtleCoind({
-  host: <span class="hljs-string">'127.0.0.1'</span>, <span class="hljs-comment">// ip address or hostname of the TurtleCoind host</span>
+  host: <span class="hljs-string">&#x27;127.0.0.1&#x27;</span>, <span class="hljs-comment">// ip address or hostname of the TurtleCoind host</span>
   port: <span class="hljs-number">11898</span>, <span class="hljs-comment">// what port is the RPC server running on</span>
   timeout: <span class="hljs-number">2000</span>, <span class="hljs-comment">// request timeout</span>
   ssl: <span class="hljs-literal">false</span>, <span class="hljs-comment">// whether we need to connect using SSL/TLS</span>
-  userAgent: <span class="hljs-string">'turtlecoin-rpc/4.0.0'</span> <span class="hljs-comment">// specify a customer user-agent or use the default</span>
+  userAgent: <span class="hljs-string">&#x27;turtlecoin-rpc/4.0.0&#x27;</span> <span class="hljs-comment">// specify a customer user-agent or use the default</span>
 })</code></pre>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> TurtleCoind = <span class="hljs-built_in">require</span>(<span class="hljs-string">'turtlecoin-rpc'</span>).TurtleCoind
+				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> TurtleCoind = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;turtlecoin-rpc&#x27;</span>).TurtleCoind
 
 <span class="hljs-keyword">const</span> daemon = <span class="hljs-keyword">new</span> TurtleCoind({
-  <span class="hljs-attr">host</span>: <span class="hljs-string">'127.0.0.1'</span>, <span class="hljs-comment">// ip address or hostname of the TurtleCoind host</span>
+  <span class="hljs-attr">host</span>: <span class="hljs-string">&#x27;127.0.0.1&#x27;</span>, <span class="hljs-comment">// ip address or hostname of the TurtleCoind host</span>
   <span class="hljs-attr">port</span>: <span class="hljs-number">11898</span>, <span class="hljs-comment">// what port is the RPC server running on</span>
   <span class="hljs-attr">timeout</span>: <span class="hljs-number">2000</span>, <span class="hljs-comment">// request timeout</span>
   <span class="hljs-attr">ssl</span>: <span class="hljs-literal">false</span>, <span class="hljs-comment">// whether we need to connect using SSL/TLS</span>
-  <span class="hljs-attr">userAgent</span>: <span class="hljs-string">'turtlecoin-rpc/4.0.0'</span> <span class="hljs-comment">// specify a customer user-agent or use the default</span>
+  <span class="hljs-attr">userAgent</span>: <span class="hljs-string">&#x27;turtlecoin-rpc/4.0.0&#x27;</span> <span class="hljs-comment">// specify a customer user-agent or use the default</span>
 })</code></pre>
 				<a href="#wallet-api" id="wallet-api" style="color: inherit; text-decoration: none;">
 					<h3>Wallet-API</h3>
 				</a>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {WalletAPI} <span class="hljs-keyword">from</span> <span class="hljs-string">'turtlecoin-rpc'</span>;
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {WalletAPI} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;turtlecoin-rpc&#x27;</span>;
 
 <span class="hljs-keyword">const</span> wallet = <span class="hljs-keyword">new</span> WalletAPI({
-  host: <span class="hljs-string">'127.0.0.1'</span>, <span class="hljs-comment">// ip address or hostname of wallet-api host</span>
+  host: <span class="hljs-string">&#x27;127.0.0.1&#x27;</span>, <span class="hljs-comment">// ip address or hostname of wallet-api host</span>
   port: <span class="hljs-number">8070</span>, <span class="hljs-comment">// port wallet-api is running on, default is 8070</span>
   timeout: <span class="hljs-number">5000</span>, <span class="hljs-comment">// how long to wait before timing out the connection</span>
   ssl: <span class="hljs-literal">false</span>, <span class="hljs-comment">// whether or not to connect through SSL</span>
-  password: <span class="hljs-string">'password'</span>, <span class="hljs-comment">// your rpc password</span>
+  password: <span class="hljs-string">&#x27;password&#x27;</span>, <span class="hljs-comment">// your rpc password</span>
   defaultMixin: <span class="hljs-number">3</span>, <span class="hljs-comment">// should be configured to the default mixin, or false if no default mixin is set</span>
   defaultFee: <span class="hljs-number">0.1</span>, <span class="hljs-comment">// the default fee of your network, in decimal not atomic units</span>
   decimalDivisor: <span class="hljs-number">100</span>, <span class="hljs-comment">// how many decimals will be used</span>
   defaultUnlockTime: <span class="hljs-number">0</span>, <span class="hljs-comment">// default unlock time</span>
-  userAgent: <span class="hljs-string">'turtlecoin-rpc/4.0.0'</span> <span class="hljs-comment">// specify a customer user-agent or use the default</span>
+  userAgent: <span class="hljs-string">&#x27;turtlecoin-rpc/4.0.0&#x27;</span> <span class="hljs-comment">// specify a customer user-agent or use the default</span>
 })</code></pre>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> WalletAPI = <span class="hljs-built_in">require</span>(<span class="hljs-string">'turtlecoin-rpc'</span>).WalletAPI
+				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> WalletAPI = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;turtlecoin-rpc&#x27;</span>).WalletAPI
 
 <span class="hljs-keyword">const</span> wallet = <span class="hljs-keyword">new</span> WalletAPI({
-  <span class="hljs-attr">host</span>: <span class="hljs-string">'127.0.0.1'</span>, <span class="hljs-comment">// ip address or hostname of wallet-api host</span>
+  <span class="hljs-attr">host</span>: <span class="hljs-string">&#x27;127.0.0.1&#x27;</span>, <span class="hljs-comment">// ip address or hostname of wallet-api host</span>
   <span class="hljs-attr">port</span>: <span class="hljs-number">8070</span>, <span class="hljs-comment">// port wallet-api is running on, default is 8070</span>
   <span class="hljs-attr">timeout</span>: <span class="hljs-number">5000</span>, <span class="hljs-comment">// how long to wait before timing out the connection</span>
   <span class="hljs-attr">ssl</span>: <span class="hljs-literal">false</span>, <span class="hljs-comment">// whether or not to connect through SSL</span>
-  <span class="hljs-attr">password</span>: <span class="hljs-string">'password'</span>, <span class="hljs-comment">// your rpc password</span>
+  <span class="hljs-attr">password</span>: <span class="hljs-string">&#x27;password&#x27;</span>, <span class="hljs-comment">// your rpc password</span>
   <span class="hljs-attr">defaultMixin</span>: <span class="hljs-number">3</span>, <span class="hljs-comment">// should be configured to the default mixin, or false if no default mixin is set</span>
   <span class="hljs-attr">defaultFee</span>: <span class="hljs-number">0.1</span>, <span class="hljs-comment">// the default fee of your network, in decimal not atomic units</span>
   <span class="hljs-attr">decimalDivisor</span>: <span class="hljs-number">100</span>, <span class="hljs-comment">// how many decimals will be used</span>
   <span class="hljs-attr">defaultUnlockTime</span>: <span class="hljs-number">0</span>, <span class="hljs-comment">// default unlock time</span>
-  <span class="hljs-attr">userAgent</span>: <span class="hljs-string">'turtlecoin-rpc/4.0.0'</span> <span class="hljs-comment">// specify a customer user-agent or use the default</span>
+  <span class="hljs-attr">userAgent</span>: <span class="hljs-string">&#x27;turtlecoin-rpc/4.0.0&#x27;</span> <span class="hljs-comment">// specify a customer user-agent or use the default</span>
 })</code></pre>
 				<a href="#documentation" id="documentation" style="color: inherit; text-decoration: none;">
 					<h2>Documentation</h2>
@@ -199,6 +199,9 @@ Please see the included LICENSE <span class="hljs-keyword">file</span> <span cla
 				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+			</ul>
 		</div>
 	</div>
 </footer>
@@ -207,6 +210,5 @@ Please see the included LICENSE <span class="hljs-keyword">file</span> <span cla
 </div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>

@@ -2,1003 +2,707 @@
 //
 // Please see the included LICENSE file for more information.
 
+import * as BigInteger from 'big-integer';
+
 export namespace TurtleCoindInterfaces {
-    export interface IBlockDetails {
+    export interface IVersion {
         /**
-         * The number of already generated coins in the blockchain (aka. circulation)
+         * The major version number
          */
-        alreadyGeneratedCoins: string;
+        major: number;
+
         /**
-         * The number of generated transactions in the blockchain
+         * The minor version number
          */
-        alreadyGeneratedTransactions: number;
+        minor: number;
+
         /**
-         * The base reward for the block which does not include any transaction fees or penalty modifiers
+         * The patch version number
          */
-        baseReward: number;
-        /**
-         * The size of the block in bytes
-         */
-        blockSize: number;
-        /**
-         * How deep the block is from the tip of the blockchain. (aka. confirmations)
-         */
-        depth: number;
-        /**
-         * The difficulty of the block
-         */
-        difficulty: number;
-        /**
-         * The block hash
-         */
-        hash: string;
-        /**
-         * The zero-based index of the block
-         */
-        index: number;
-        /**
-         * The major version of the block
-         */
-        majorVersion: number;
-        /**
-         * The minor version of the block
-         */
-        minorVersion: number;
-        /**
-         * The nonce for the block
-         */
-        nonce: number;
-        /**
-         * The previous block hash included in this block
-         */
-        prevBlockhash: string;
-        /**
-         * The total reward for the block including any transaction fees and penalty modifiers
-         */
-        reward: number;
-        /**
-         * The median size of the last n blocks
-         */
-        sizeMedian: number;
-        /**
-         * The timestamp of the block
-         */
-        timestamp: number;
-        /**
-         * The total amount of transaction fees claimed in the block
-         */
-        totalFeeAmount: number;
-        /**
-         * The transactions contained in the block
-         */
-        transactions: ITransactionDetail[];
-        /**
-         * The total size of the transactions contained in the block
-         */
-        transactionsCumulativeSize: number;
+        patch: number;
     }
 
-    export interface ITransactionDetail {
+    export interface IFee {
         /**
-         * The hash of the block the transaction is in
+         * The wallet address to send the node transaction fee to
          */
-        blockHash: string;
+        address: string;
+
         /**
-         * The index of the block the transaction is in
+         * The amount for the node transaction fee
          */
-        blockIndex: number;
+        amount: BigInteger.BigInteger;
+    }
+
+    export interface IHeight {
         /**
-         * The extra data contained in the transaction
+         * The current sync height of the node
          */
-        extra: ITransactionExtraDetail;
+        height: number;
+
         /**
-         * The Transaction fee
+         * The current observed network height
+         */
+        networkHeight: number;
+    }
+
+    export interface IInfo {
+        /**
+         * The number of alternate candidate blocks the node is aware of
+         */
+        alternateBlockCount: number;
+
+        /**
+         * The current mining difficulty of the network
+         */
+        difficulty: number;
+
+        /**
+         * The number of peers in the node's greylist
+         */
+        greyPeerlistSize: number;
+
+        /**
+         * The estimated global network hashrate
+         */
+        hashrate: number;
+
+        /**
+         * The current sync height of the node
+         */
+        height: number;
+
+        /**
+         * The number of current incoming connections into the node
+         */
+        incomingConnections: number;
+
+        /**
+         * The last block index of the node
+         */
+        lastBlockIndex: number;
+
+        /**
+         * The current block major version number
+         */
+        majorVersion: number;
+
+        /**
+         * The current block minor version number
+         */
+        minorVersion: number;
+
+        /**
+         * The current observed network height
+         */
+        networkHeight: number;
+
+        /**
+         * The number of current outgoing connections from the node
+         */
+        outgoingConnections: number;
+
+        /**
+         * The datetime of when the node was started
+         */
+        startTime: Date;
+
+        /**
+         * The block height that this node has support until
+         */
+        supportedHeight: number;
+
+        /**
+         * Whether the node is synced or not
+         */
+        synced: boolean;
+
+        /**
+         * The number of transactions in the memory pool
+         */
+        transactionsPoolSize: number;
+
+        /**
+         * The number of user-generated transactions in the blockchain
+         */
+        transactionsSize: number;
+
+        /**
+         * The network upgrade heights that this node knows about
+         */
+        upgradeHeights: number[];
+
+        /**
+         * The version number of this node
+         */
+        version: IVersion;
+
+        /**
+         * The number of candidate peers in the node's whitelist
+         */
+        whitePeerlistSize: number;
+
+        /**
+         * Whether this node is a cache API or not
+         */
+        isCacheApi?: boolean
+    }
+
+    export interface IPeers {
+        /**
+         * A list of grey listed peers
+         */
+        greyPeers: {
+            /**
+             * The IP/hostname
+             */
+            host: string,
+
+            /**
+             * The port
+             */
+            port: number
+        }[];
+
+        /**
+         * A list of candidate peers
+         */
+        peers: {
+            /**
+             * The IP/hostname
+             */
+            host: string,
+
+            /**
+             * The port
+             */
+            port: number
+        }[];
+    }
+
+    export interface TransactionSummary {
+        /**
+         * The total amount of the outputs in the transaction
+         */
+        amountOut: number;
+
+        /**
+         * The network fee paid by the transaction
          */
         fee: number;
+
         /**
          * The transaction hash
          */
         hash: string;
+
         /**
-         * Whether the transaction is in the blockchain or not
-         */
-        inBlockchain: boolean;
-        /**
-         * The inputs of the transaction
-         */
-        inputs: ITransactionDetailInput[];
-        /**
-         * The number of mixins used in the transaction's ring signatures
-         */
-        mixin: number;
-        /**
-         * The outputs of the transaction
-         */
-        outputs: ITransactionDetailOutput[];
-        /**
-         * The paymentId of the transaction
-         */
-        paymentId: string;
-        /**
-         * The ring signatures of the inputs of the transaction
-         */
-        signatures: string[];
-        /**
-         * The size in bytes of the transaction signatures
-         */
-        signaturesSize: number;
-        /**
-         * The size in bytes of the transaction
+         * The size of the transaction in bytes
          */
         size: number;
-        /**
-         * The timestamp of the transaction (inferred from block timestamp)
-         */
-        timestamp: number;
-        /**
-         * The total amount of the transaction inputs
-         */
-        totalInputsAmount: number;
-        /**
-         * The total amount of the transaction outputs
-         */
-        totalOutputsAmount: number;
-        /**
-         * The unlock time of the transaction
-         */
-        unlockTime: number;
     }
 
-    export interface ITransactionDetailInput {
+    export interface ITransactionMeta {
         /**
-         * The transaction input data
+         * The total amount of the outputs in the transaction
          */
-        data: ITransactionDetailInputCoinbase | ITransactionDetailInputKey;
-        /**
-         * The transaction input type
-         */
-        type: string;
-    }
+        amountOut: number;
 
-    export interface ITransactionDetailInputCoinbase {
         /**
-         * The input amount
-         */
-        amount: number;
-        input: {
-            /**
-             * The height for which this input was generated
-             */
-            height: number;
-        }
-    }
-
-    export interface ITransactionDetailInputKey {
-        /**
-         * The input data
-         */
-        input: ITransactionDetailInputKeyInput;
-        /**
-         * The number of mixins used for this input
-         */
-        mixin: number;
-        /**
-         * output information of this input
-         */
-        output: ITransactionDetailInputKeyOutput;
-    }
-
-    export interface ITransactionDetailInputKeyInput {
-        /**
-         * the amount of the input
-         */
-        amount: number;
-        /**
-         * the key image of the input
-         */
-        k_image: string;
-        /**
-         * The output offsets used in mixing for this input
-         */
-        key_offsets: number[];
-    }
-
-    export interface ITransactionDetailInputKeyOutput {
-        /**
-         * the number (index) of the output
-         */
-        number: number;
-        /**
-         * The transaction hash of the output
-         */
-        transactionHash: string;
-    }
-
-    export interface ITransactionExtraDetail {
-        /**
-         * The transaction nonce
-         */
-        nonce?: number[];
-        /**
-         * The transaction public key
-         */
-        publicKey: string;
-        /**
-         * The hex representation of the raw extra in the transaction
-         */
-        raw: string;
-    }
-
-    export interface IBlocksDetailedResponse {
-        /**
-         * an array of blocks
-         */
-        blocks: IBlockDetails[];
-        /**
-         * The current height of the blockchain
-         */
-        currentHeight: number;
-        /**
-         * The offset of the response
-         */
-        fullOffset: number;
-        /**
-         * The height at which this response starts
-         */
-        startHeight: number;
-        /**
-         * the status of the response
-         */
-        status: string;
-    }
-
-    export interface ITransactionDetailOutput {
-        /**
-         * the global index of the output
-         */
-        globalIndex: number;
-        /**
-         * the output data
-         */
-        output: ITransactionOutput;
-    }
-
-    export interface ITransactionOutput {
-        /**
-         * the amount of the output
-         */
-        amount: number;
-        target: {
-            data: {
-                /**
-                 * the one-time output key
-                 */
-                key: string;
-            },
-            /**
-             * the type of the output
-             */
-            type: string;
-        }
-    }
-
-    export interface IBlockSummary {
-        /**
-         * the number of generated coins in the blockchain
-         */
-        alreadyGeneratedCoins: string;
-        /**
-         * the number of generated transactions in the blockchain
-         */
-        alreadyGeneratedTransactions: number;
-        /**
-         * the base reward of the block without transactions fees or penalty modifiers applied
-         */
-        baseReward: number;
-        /**
-         * the size of the block in bytes
-         */
-        blockSize: number;
-        /**
-         * the number of blocks from the tip of the blockchain (aka. confirmations)
-         */
-        depth: number;
-        /**
-         * the difficulty of the block
-         */
-        difficulty: number;
-        /**
-         * the effective median size of the last n blocks in bytes
-         */
-        effectiveSizeMedian: number;
-        /**
-         * the block hash
-         */
-        hash: string;
-        /**
-         * the block height
-         */
-        height: number;
-        /**
-         * the major version of the block
-         */
-        major_version: number;
-        /**
-         * the minor version of the block
-         */
-        minor_version: number;
-        /**
-         * the block nonce
-         */
-        nonce: number;
-        /**
-         * whether the block is an orphan or not
-         */
-        orphan_status: boolean;
-        /**
-         * the penalty applied to this block
-         */
-        penalty: number;
-        /**
-         * the previous block hash included in this block
-         */
-        prev_hash: string;
-        /**
-         * the total reward for this block including transaction fees and penalty modifiers
-         */
-        reward: number;
-        /**
-         * the median size of the last n blocks in bytes
-         */
-        sizeMedian: number;
-        /**
-         * the timestamp of the block
-         */
-        timestamp: number;
-        /**
-         * the total transaction fees included in the block
-         */
-        totalFeeAmount: number;
-        /**
-         * the transactions included in the block
-         */
-        transactions: ITransactionSummary[];
-        /**
-         * the total size of the transactions included in the block in bytes
-         */
-        transactionsCumulativeSize: number;
-    }
-
-    export interface ITransactionSummary {
-        /**
-         * the transaction hash
-         */
-        hash: string;
-        /**
-         * the fee of the transaction
+         * The network fee paid by the transaction
          */
         fee: number;
+
         /**
-         * the total amount of the outputs of the transaction
+         * The payment ID contained in the transaction
          */
-        amount_out: number;
+        paymentId: string;
+
         /**
-         * the size of the transaction in bytes
+         * The transaction one-time public key
+         */
+        publicKey: string;
+
+        /**
+         * The number of participant keys used in the ring signatures
+         */
+        ringSize: number;
+
+        /**
+         * The size of the transaction in bytes
          */
         size: number;
     }
 
     export interface IBlockHeader {
         /**
-         * the size of the block in bytes
+         * The currency circulation as of the given block
          */
-        block_size: number;
+        alreadyGeneratedCoins: BigInteger.BigInteger;
+
         /**
-         * the number of blocks from the tip of the blockchain (aka. confirmations)
+         * The number of transactions (including coinbase) in the chain as of the given block
+         */
+        alreadyGeneratedTransactions: number;
+
+        /**
+         * The base reward of the block
+         */
+        baseReward: number;
+
+        /**
+         * The current block depth
          */
         depth: number;
+
         /**
-         * the difficulty of the block
+         * The difficulty of the block
          */
         difficulty: number;
+
         /**
-         * the block hash
+         * The block hash
          */
         hash: string;
+
         /**
-         * the block height
+         * The block height
          */
         height: number;
+
         /**
-         * the block major version
+         * The block major version number
          */
-        major_version: number;
+        majorVersion: number;
+
         /**
-         * the block minor version
+         * The block minor version number
          */
-        minor_version: number;
+        minorVersion: number;
+
         /**
-         * the block nonce
+         * The block nonce
          */
         nonce: number;
+
         /**
-         * the number of transactions included in the block
+         * Whether the block is an orphan
          */
-        num_txes: number;
+        orphan: boolean;
+
         /**
-         * whether the block is orphaned or not
+         * The block reward penalty applied
          */
-        orphan_status: boolean;
+        penalty: number;
+
         /**
-         * the previous block hash included in this block
+         * The previous block hash
          */
-        prev_hash: string;
+        prevHash: string;
+
         /**
-         * the total reward of this block including transaction fees and penalty modifiers
+         * The total reward granted for mining this block
          */
         reward: number;
+
         /**
-         * the timestamp of the block
+         * The size of the block in bytes
          */
-        timestamp: number;
+        size: number;
+
+        /**
+         * The median block size in bytes
+         */
+        sizeMedian: number;
+
+        /**
+         * The datetime the block was mined
+         */
+        timestamp: Date;
+
+        /**
+         * The total amount of transaction fees included in the block
+         */
+        totalFeeAmount: number;
+
+        /**
+         * The number of transactions included in this block
+         */
+        transactionCount: number;
+
+        /**
+         * The total size (in bytes) of the transactions in this block
+         */
+        transactionsCumulativeSize: number;
     }
 
-    export interface IBlockShortHeader {
+    export interface IBlock extends IBlockHeader {
         /**
-         * the total size of the block including transactions
+         * An array of transaction summaries contained in the block
          */
-        cumul_size: number;
-        /**
-         * the difficulty of the block
-         */
-        difficulty: number;
-        /**
-         * the block hash
-         */
-        hash: string;
-        /**
-         * the block height
-         */
-        height: number;
-        /**
-         * the timestamp of the block
-         */
-        timestamp: number;
-        /**
-         * the number of transactions included in the block
-         */
-        tx_count: number;
+        transactions: TransactionSummary[];
     }
 
-    export interface IPeersResponse {
+    export interface IRawBlock {
         /**
-         * list of greylisted peers
+         * The raw block in hex representation
          */
-        gray_peers: string[];
-        /**
-         * list of candidate peers
-         */
-        peers: string[];
-        /**
-         * the response status
-         */
-        status: string;
-    }
+        blob: string;
 
-    export interface IInfoResponse {
         /**
-         * the number of alternate (candidate) blocks available
+         * An array of raw transactions in hex representation
          */
-        alt_blocks_count: number;
-        /**
-         * the current difficulty the network must solve for
-         */
-        difficulty: number;
-        /**
-         * the number of peers in the daemon's greylist
-         */
-        grey_peerlist_size: number;
-        /**
-         * the current estimate of the total network hashrate
-         */
-        hashrate: number;
-        /**
-         * the height of the block the daemon is currently looking for
-         */
-        height: number;
-        /**
-         * the number of incoming connections to the daemon
-         */
-        incoming_connections_count: number;
-        /**
-         * the last known commited block index
-         */
-        last_known_block_index: number;
-        /**
-         * the major version of the block for which the network is solving for
-         */
-        major_version: number;
-        /**
-         * the minor version of the block for which the network is solving for
-         */
-        minor_version: number;
-        /**
-         * the observed network height for which the network is solving for
-         */
-        network_height: number;
-        /**
-         * the number of outgoing connections from the daemon
-         */
-        outgoing_connections_count: number;
-        /**
-         * the timestamp of when the daemon was launched
-         */
-        start_time: number;
-        /**
-         * the response status message
-         */
-        status: string;
-        /**
-         * the height that the current daemon is currently supported until
-         */
-        supported_height: number;
-        /**
-         * whether the daemon believes it is synchronized with the network or not
-         */
-        synced: boolean;
-        /**
-         * the number of transactions the daemon is aware of
-         */
-        tx_count: number;
-        /**
-         * the number of transactions in the daemon's mempool
-         */
-        tx_pool_size: number;
-        /**
-         * the network upgrade heights the daemon is aware of
-         */
-        upgrade_heights: number[];
-        /**
-         * the version of the software the daemon is currently running
-         */
-        version: string;
-        /**
-         * the number of whitelisted peers in the daemon's peerlist
-         */
-        white_peerlist_size: number;
-    }
-
-    export interface IHeightResponse {
-        /**
-         * the height of the block the daemon is currently looking for
-         */
-        height: number;
-        /**
-         * the observed network height for which the network is solving for
-         */
-        network_height: number;
-        /**
-         * the response status
-         */
-        status: string;
-    }
-
-    export interface IFeeResponse {
-        /**
-         * the address to send node fee donations to
-         */
-        address: string;
-        /**
-         * the requested node fee donation amount
-         */
-        amount: number;
-        /**
-         * the response status
-         */
-        status: string;
+        transactions: string[];
     }
 
     export interface IBlockTemplate {
         /**
-         * the hex representation of the block template
-         */
-        blocktemplate_blob: string;
-        /**
-         * the difficulty to solve for
+         * The difficulty that must be met for this block
          */
         difficulty: number;
+
         /**
-         * the height this block template applies to
+         * The height for which the block template is valid
          */
         height: number;
+
         /**
-         * the offset location (inclusive and 0-based in bytes) in the blocktemplate blob that has been zeroed for use
+         * The location of the offset bytes that can be used
+         * for pooled mining
          */
-        reserved_offset: number;
+        reservedOffset: number;
+
         /**
-         * the response status
+         * The raw block template in hex representation
          */
-        status: string;
+        blob: string;
     }
 
-    export interface ITransactionStatusResponse {
+    export interface ITransactionInputCoinbase {
         /**
-         * the list of transaction hashes found in blocks
+         * The block height of the coinbase input
          */
-        transactionsInBlock: string[];
+        height: number;
+
         /**
-         * the list of transaction hashes found in the mempool
+         * The input type
          */
-        transactionsInPool: string[];
-        /**
-         * the list of transaction hashes that were not found
-         */
-        transactionsUnknown: string[];
+        type: string;
     }
 
-    export interface IBlockLite {
+    export interface ITransactionInputKey {
         /**
-         * the hexrepsentation of the block
+         * The amount of the transaction input
          */
-        block: string;
+        amount: number;
+
         /**
-         * the block hash
+         * The key image used by the transaction input
          */
-        hash: string;
+        keyImage: string;
+
         /**
-         * the transactions included in the block
+         * The global index offsets used in the input signature(s)
          */
-        transactions: IBlockLiteTransaction[];
+        offsets: number[];
+
+        /**
+         * The input type
+         */
+        type: string;
     }
 
-    export interface IBlockLiteResponse {
+    export interface ITransactionOutputKey {
         /**
-         * the current height of the daemon
+         * The amount of the transaction output
          */
-        currentHeight: number;
-        /**
-         * the offset of the response
-         */
-        fullOffset: number;
-        /**
-         * the blocks
-         */
-        items: IBlockLite[];
-        /**
-         * the starting height of the blocks included in this response
-         */
-        startHeight: number;
-        /**
-         * the response status
-         */
-        status: string;
-    }
+        amount: number;
 
-    export interface IBlockLiteTransaction {
         /**
-         * the transaction hash
+         * The destination key of the transaction output
          */
-        hash: string;
+        key: string;
+
         /**
-         * the transaction prefix
+         * The output type
          */
-        prefix: ITransactionPrefix;
+        type: string;
     }
 
     export interface ITransactionPrefix {
         /**
-         * the extra data included in the transaction
+         * The hex representation of the data contained in the TX_EXTRA field
          */
         extra: string;
+
         /**
-         * the unlock time of the transaction
+         * The transaction input(s)
          */
-        unlock_time: number;
+        inputs: ITransactionInputCoinbase[] | ITransactionInputKey[];
+
         /**
-         * the transaction version number
+         * The transaction output(s)
+         */
+        outputs: ITransactionOutputKey[];
+
+        /**
+         * The unlock time of the transaction
+         */
+        unlockTime: BigInteger.BigInteger;
+
+        /**
+         * The version number of the transaction
          */
         version: number;
-        /**
-         * the transaction inputs
-         */
-        vin: IInputCoinbase[] | IInputKey[];
-        /**
-         * the transaction outputs
-         */
-        vout: IOutputKey[];
     }
 
-    export interface IInputCoinbase {
+    export interface ITransaction {
         /**
-         * the input type
+         * The header of the block containing the transaction
          */
-        type: string;
-        value: {
-            /**
-             * the height for which this coinbase input was generated
-             */
-            height: number;
-        };
-    }
+        block: IBlockHeader;
 
-    export interface IInputKey {
         /**
-         * the input type
-         */
-        type: string;
-        value: {
-            /**
-             * the input amount
-             */
-            amount: number;
-            /**
-             * the input key image
-             */
-            k_image: string;
-            /**
-             * the output offsets used within this input ring signature
-             */
-            key_offsets: number[]
-        };
-    }
-
-    export interface IOutputKey {
-        /**
-         * the output amount
-         */
-        amount: number;
-        target: {
-            data: {
-                /**
-                 * the one-time output key of the output
-                 */
-                key: string;
-            },
-            /**
-             * the output type
-             */
-            type: string;
-        };
-    }
-
-    export interface ISendRawTransactionResponse {
-        /**
-         * the response status
-         */
-        status: string;
-        /**
-         * the response error message (if any)
-         */
-        error?: string;
-    }
-
-    export interface ITransactionMeta {
-        /**
-         * the total amount of the transaction outputs
-         */
-        amount_out: number;
-        /**
-         * the transaction fee
-         */
-        fee: number;
-        /**
-         * the transaction hash
-         */
-        hash: string;
-        /**
-         * the number of ring signature participants used in the input ring signatures
-         */
-        mixin: number;
-        /**
-         * the payment ID of the transaction
-         */
-        paymentId: string;
-        /**
-         * the size of the transaction in bytes
-         */
-        size: number;
-    }
-
-    export interface ITransactionResponse {
-        /**
-         * the block short header
-         */
-        block: IBlockShortHeader;
-        /**
-         * the response status
-         */
-        status: string;
-        /**
-         * the transaction prefix
-         */
-        tx: ITransactionPrefix;
-        /**
-         * the transaction details
-         */
-        txDetails: ITransactionMeta;
-    }
-
-    export interface IGlobalIndexesResponse {
-        /**
-         * the transaction hash/key
-         */
-        key: string;
-        /**
-         * the global output indexes in the transaction
-         */
-        value: number[];
-    }
-
-    export interface IPoolChangesAdded {
-        /**
-         * the transaction hash
-         */
-        hash: string;
-        /**
-         * the transaction prefix
+         * The transaction prefix information
          */
         prefix: ITransactionPrefix;
+
+        /**
+         * The meta data regarding the transaction
+         */
+        meta: ITransactionMeta;
     }
 
-    export interface IPoolChanges {
+    export interface ITransactionPoolDelta {
         /**
-         * the transactions added to the mempool since the last ask
+         * An array of raw transactions in hex representation that were added
+         * to the memory pool
          */
-        addedTxs: IPoolChangesAdded[];
-        /**
-         * an array of transaction hashes that have been deleted from the mempool
-         */
-        deletedTxsIds: string[];
-        /**
-         * whether the block hash supplied is the top of the blockchain or not
-         */
-        isTailBlockActual: boolean;
-        /**
-         * the response status
-         */
-        status: string;
-    }
+        added: string[];
 
-    export interface IWalletSyncData {
         /**
-         * the blocks
+         * An array of transaction hashes that have been removed from the memory pool
          */
-        items: IWalletSyncDataBlock[];
+        deleted: string[];
+
         /**
-         * the response status
-         */
-        status: string;
-        /**
-         * whether the information we supplied indicates that we are currently synchronized with the top
-         * of the blockchain
+         * Whether the last known block hash supplied is at the top of the block chain
          */
         synced: boolean;
-        topBlock?: {
+    }
+
+    export interface ITransactionsStatus {
+        /**
+         * An array of transaction hashes that are contained within blocks
+         */
+        inBlock: string[];
+
+        /**
+         * An array of transaction hashes that are contained within the memory pool
+         */
+        inPool: string[];
+
+        /**
+         * An array of transaction hashes that could not be found
+         */
+        notFound: string[];
+    }
+
+    export interface IRandomOutput {
+        /**
+         * The amount of the output
+         */
+        amount: number;
+
+        /**
+         * An array of outputs for the given amount
+         */
+        outputs: {
             /**
-             * the top block hash
+             * The global index
+             */
+            index: number,
+
+            /**
+             * The output key
+             */
+            key: string
+        }[]
+    }
+
+    export interface ITransactionIndexes
+    {
+        /**
+         * The transaction hash
+         */
+        hash: string;
+
+        /**
+         * An array of global indexes for the transaction in the order in which
+         * they were listed in the transaction output(s)
+         */
+        indexes: number[];
+    }
+
+    export interface ISyncBlock {
+        /**
+         * The block hash
+         */
+        hash: string;
+
+        /**
+         * The block height
+         */
+        height: number;
+
+        /**
+         * The datetime of the block
+         */
+        timestamp: Date;
+
+        /**
+         * The coinbase transaction contained in the block
+         */
+        coinbaseTX?: {
+            /**
+             * The transaction hash
              */
             hash: string;
             /**
-             * the top block height
+             * The transaction outputs
+             */
+            outputs: {
+                /**
+                 * The output amount
+                 */
+                amount: number,
+
+                /**
+                 * The output key
+                 */
+                key: string
+            }[],
+
+            /**
+             * The one-time public key of the transaction
+             */
+            publicKey: string;
+
+            /**
+             * The unlock time of the transaction
+             */
+            unlockTime: BigInteger.BigInteger;
+        }
+
+        /**
+         * An array of transactions in the block
+         */
+        transactions: ISyncTransaction[]
+    }
+
+    export interface ISyncTransaction {
+        /**
+         * The transaction hash
+         */
+        hash: string;
+
+        /**
+         * An array of the transaction inputs
+         */
+        inputs: {
+            /**
+             * The amount of the input
+             */
+            amount: number;
+
+            /**
+             * The key image used for the input
+             */
+            keyImage: string;
+        }[];
+
+        /**
+         * An array of the transaction outputs
+         */
+        outputs: {
+            /**
+             * The amount of the output
+             */
+            amount: number;
+
+            /**
+             * The output key
+             */
+            key: string;
+        }[];
+
+        /**
+         * The payment ID of the transaction
+         */
+        paymentId: string;
+
+        /**
+         * The one-time public key of the transaction
+         */
+        publicKey: string;
+
+        /**
+         * The unlock time of the transaction
+         */
+        unlockTime: BigInteger.BigInteger;
+    }
+
+    export interface ISync {
+        /**
+         * An array of blocks as a result of the sync request
+         */
+        blocks: ISyncBlock[],
+
+        /**
+         * Whether, based on the information supplied, you are synced with the block chain
+         */
+        synced: boolean;
+
+        /**
+         * Information regarding the top block of the block chain
+         */
+        topBlock?: {
+            /**
+             * The top block hash
+             */
+            hash: string;
+
+            /**
+             * The top block height
              */
             height: number;
         }
     }
 
-    export interface IWalletSyncDataBlock {
+    export interface IRawSync {
         /**
-         * the block hash
+         * An array of RawBlocks as a result of the sync request
          */
-        blockHash: string;
-        /**
-         * the block height
-         */
-        blockHeight: number;
-        /**
-         * the block timestamp
-         */
-        blockTimestamp: number;
-        /**
-         * the coinbase transaction
-         */
-        coinbaseTX?: IWalletSyncDataTransaction;
-        /**
-         * the transactions contained within the block
-         */
-        transactions: IWalletSyncDataTransaction[];
-    }
+        blocks: IRawBlock[];
 
-    export interface IWalletSyncDataTransaction {
         /**
-         * the transaction hash
-         */
-        hash: string;
-        /**
-         * the public key of the transaction
-         */
-        txPublicKey: string;
-        /**
-         * the unlock time of the transaction
-         */
-        unlockTime: number;
-        /**
-         * the transaction inputs
-         */
-        inputs?: ITransactionDetailInputKeyInput[];
-        /**
-         * the transaction outputs
-         */
-        outputs: IWalletSyncDataTransactionOutput[];
-    }
-
-    export interface IWalletSyncDataTransactionOutput {
-        /**
-         * the output amount
-         */
-        amount: number;
-        /**
-         * the one-time output key
-         */
-        key: string;
-    }
-
-    export interface IRawBlocksResponse {
-        /**
-         * the raw blocks
-         */
-        items: IRawBlock[];
-        /**
-         * whether the information we supplied indicates that we are currently synchronized with the top
-         * of the blockchain
+         * Whether, based on the information supplied, you are synced with the block chain
          */
         synced: boolean;
-        /**
-         * the response status
-         */
-        status: string;
-    }
 
-    export interface IRawBlock {
         /**
-         * the hex representation fo the block
+         * Information regarding the top block of the block chain
          */
-        block: string;
-        /**
-         * an array of hex representations of the transactions included in the block
-         */
-        transactions: string[];
-    }
+        topBlock?: {
+            /**
+             * The top block hash
+             */
+            hash: string;
 
-    export interface IRandomOutputsResponse {
-        /**
-         * the random outputs matrices
-         */
-        outs: IRandomOuts[];
-        /**
-         * the response status
-         */
-        status: string;
-    }
-
-    export interface IRandomOuts {
-        /**
-         * the amount of the random output
-         */
-        amount: number;
-        /**
-         * the random outputs data
-         */
-        outs: IRandomOutput[];
-    }
-
-    export interface IRandomOutput {
-        /**
-         * the output global index value
-         */
-        global_amount_index: number;
-        /**
-         * the output one-time key
-         */
-        out_key: string;
+            /**
+             * The top block height
+             */
+            height: number;
+        }
     }
 }

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ITransactionPrefix | TurtleCoin-RPC</title>
+	<title>ISyncBlock | TurtleCoin-RPC</title>
 	<meta name="description" content="Documentation for TurtleCoin-RPC">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules/turtlecoindinterfaces.html">TurtleCoindInterfaces</a>
 				</li>
 				<li>
-					<a href="turtlecoindinterfaces.itransactionprefix.html">ITransactionPrefix</a>
+					<a href="turtlecoindinterfaces.isyncblock.html">ISyncBlock</a>
 				</li>
 			</ul>
-			<h1>Interface ITransactionPrefix</h1>
+			<h1>Interface ISyncBlock</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ITransactionPrefix</span>
+						<span class="target">ISyncBlock</span>
 					</li>
 				</ul>
 			</section>
@@ -80,11 +80,11 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="turtlecoindinterfaces.itransactionprefix.html#extra" class="tsd-kind-icon">extra</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="turtlecoindinterfaces.itransactionprefix.html#inputs" class="tsd-kind-icon">inputs</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="turtlecoindinterfaces.itransactionprefix.html#outputs" class="tsd-kind-icon">outputs</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="turtlecoindinterfaces.itransactionprefix.html#unlocktime" class="tsd-kind-icon">unlock<wbr>Time</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="turtlecoindinterfaces.itransactionprefix.html#version" class="tsd-kind-icon">version</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="turtlecoindinterfaces.isyncblock.html#coinbasetx" class="tsd-kind-icon">coinbaseTX</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="turtlecoindinterfaces.isyncblock.html#hash" class="tsd-kind-icon">hash</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="turtlecoindinterfaces.isyncblock.html#height" class="tsd-kind-icon">height</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="turtlecoindinterfaces.isyncblock.html#timestamp" class="tsd-kind-icon">timestamp</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="turtlecoindinterfaces.isyncblock.html#transactions" class="tsd-kind-icon">transactions</a></li>
 							</ul>
 						</section>
 					</div>
@@ -93,77 +93,77 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="extra" class="tsd-anchor"></a>
-					<h3>extra</h3>
-					<div class="tsd-signature tsd-kind-icon">extra<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="coinbasetx" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> coinbaseTX</h3>
+					<div class="tsd-signature tsd-kind-icon">coinbaseTX<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>hash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>outputs<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>unlockTime<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BigInteger.BigInteger</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in Types/TurtleCoind.ts:436</li>
+							<li>Defined in Types/TurtleCoind.ts:566</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The hex representation of the data contained in the TX_EXTRA field</p>
+							<p>The coinbase transaction contained in the block</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="inputs" class="tsd-anchor"></a>
-					<h3>inputs</h3>
-					<div class="tsd-signature tsd-kind-icon">inputs<span class="tsd-signature-symbol">:</span> <a href="turtlecoindinterfaces.itransactioninputcoinbase.html" class="tsd-signature-type">ITransactionInputCoinbase</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><a href="turtlecoindinterfaces.itransactioninputkey.html" class="tsd-signature-type">ITransactionInputKey</a><span class="tsd-signature-symbol">[]</span></div>
+					<a name="hash" class="tsd-anchor"></a>
+					<h3>hash</h3>
+					<div class="tsd-signature tsd-kind-icon">hash<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in Types/TurtleCoind.ts:441</li>
+							<li>Defined in Types/TurtleCoind.ts:551</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The transaction input(s)</p>
+							<p>The block hash</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="outputs" class="tsd-anchor"></a>
-					<h3>outputs</h3>
-					<div class="tsd-signature tsd-kind-icon">outputs<span class="tsd-signature-symbol">:</span> <a href="turtlecoindinterfaces.itransactionoutputkey.html" class="tsd-signature-type">ITransactionOutputKey</a><span class="tsd-signature-symbol">[]</span></div>
+					<a name="height" class="tsd-anchor"></a>
+					<h3>height</h3>
+					<div class="tsd-signature tsd-kind-icon">height<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in Types/TurtleCoind.ts:446</li>
+							<li>Defined in Types/TurtleCoind.ts:556</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The transaction output(s)</p>
+							<p>The block height</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="unlocktime" class="tsd-anchor"></a>
-					<h3>unlock<wbr>Time</h3>
-					<div class="tsd-signature tsd-kind-icon">unlock<wbr>Time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">BigInteger.BigInteger</span></div>
+					<a name="timestamp" class="tsd-anchor"></a>
+					<h3>timestamp</h3>
+					<div class="tsd-signature tsd-kind-icon">timestamp<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Date</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in Types/TurtleCoind.ts:451</li>
+							<li>Defined in Types/TurtleCoind.ts:561</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The unlock time of the transaction</p>
+							<p>The datetime of the block</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="version" class="tsd-anchor"></a>
-					<h3>version</h3>
-					<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="transactions" class="tsd-anchor"></a>
+					<h3>transactions</h3>
+					<div class="tsd-signature tsd-kind-icon">transactions<span class="tsd-signature-symbol">:</span> <a href="turtlecoindinterfaces.isynctransaction.html" class="tsd-signature-type">ISyncTransaction</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in Types/TurtleCoind.ts:456</li>
+							<li>Defined in Types/TurtleCoind.ts:600</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The version number of the transaction</p>
+							<p>An array of transactions in the block</p>
 						</div>
 					</div>
 				</section>
@@ -218,9 +218,30 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-namespace">
 						<a href="turtlecoindinterfaces.isync.html" class="tsd-kind-icon">ISync</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-namespace">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface tsd-parent-kind-namespace">
 						<a href="turtlecoindinterfaces.isyncblock.html" class="tsd-kind-icon">ISync<wbr>Block</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="turtlecoindinterfaces.isyncblock.html#coinbasetx" class="tsd-kind-icon">coinbaseTX</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="turtlecoindinterfaces.isyncblock.html#hash" class="tsd-kind-icon">hash</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="turtlecoindinterfaces.isyncblock.html#height" class="tsd-kind-icon">height</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="turtlecoindinterfaces.isyncblock.html#timestamp" class="tsd-kind-icon">timestamp</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="turtlecoindinterfaces.isyncblock.html#transactions" class="tsd-kind-icon">transactions</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-namespace">
 						<a href="turtlecoindinterfaces.isynctransaction.html" class="tsd-kind-icon">ISync<wbr>Transaction</a>
 					</li>
@@ -245,30 +266,9 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-namespace">
 						<a href="turtlecoindinterfaces.itransactionpooldelta.html" class="tsd-kind-icon">ITransaction<wbr>Pool<wbr>Delta</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-namespace">
+					<li class=" tsd-kind-interface tsd-parent-kind-namespace">
 						<a href="turtlecoindinterfaces.itransactionprefix.html" class="tsd-kind-icon">ITransaction<wbr>Prefix</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="turtlecoindinterfaces.itransactionprefix.html#extra" class="tsd-kind-icon">extra</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="turtlecoindinterfaces.itransactionprefix.html#inputs" class="tsd-kind-icon">inputs</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="turtlecoindinterfaces.itransactionprefix.html#outputs" class="tsd-kind-icon">outputs</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="turtlecoindinterfaces.itransactionprefix.html#unlocktime" class="tsd-kind-icon">unlock<wbr>Time</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="turtlecoindinterfaces.itransactionprefix.html#version" class="tsd-kind-icon">version</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-namespace">
 						<a href="turtlecoindinterfaces.itransactionsstatus.html" class="tsd-kind-icon">ITransactions<wbr>Status</a>
 					</li>

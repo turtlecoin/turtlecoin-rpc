@@ -2,11 +2,11 @@
 //
 // Please see the included LICENSE file for more information.
 
-import {format} from 'util';
-import {HTTPClient} from './HTTPClient';
-import {WalletAPIInterfaces} from './Types/WalletAPI';
+import { format } from 'util';
+import { HTTPClient, IError } from './HTTPClient';
+import { WalletAPIInterfaces } from './Types/WalletAPI';
 
-export class WalletAPI extends  HTTPClient {
+export class WalletAPI extends HTTPClient {
     private readonly m_defaultMixin?: number;
     private readonly m_decimalDivisor: number = 100;
     private readonly m_defaultFeePerByte: number = 1.953125;
@@ -17,7 +17,7 @@ export class WalletAPI extends  HTTPClient {
      * @param password the API password for the WalletAPI instance
      * @param host the address of the daemon
      * @param port the port of the daemon
-     * @param timeout the timeout to use during RPC calls
+     * @param timeout the timeout to wait for each request in ms
      * @param ssl whether the daemon uses SSL (HTTPS) or not
      * @param userAgent the user agent string to use with requests
      * @param keepAlive whether the underlying HTTP(s) connection should be kept alive and reused
@@ -26,19 +26,19 @@ export class WalletAPI extends  HTTPClient {
      * @param defaultFeePerByte the default fee per byte to use in generating transactions
      * @param defaultUnlockTime the default unlock time to use in generating transaction
      */
-    constructor(password: string,
-                host?: string,
-                port?: number,
-                timeout?: number,
-                ssl?: boolean,
-                userAgent?: string,
-                keepAlive?: boolean,
-                defaultMixin?: number,
-                decimalDivisor?: number,
-                defaultFeePerByte?: number,
-                defaultUnlockTime?: number
+    constructor (password: string,
+        host?: string,
+        port?: number,
+        timeout?: number,
+        ssl?: boolean,
+        userAgent?: string,
+        keepAlive?: boolean,
+        defaultMixin?: number,
+        decimalDivisor?: number,
+        defaultFeePerByte?: number,
+        defaultUnlockTime?: number
     ) {
-        super(host, port || 8070, timeout || 30000, ssl, userAgent, keepAlive, password, handleError);
+        super(host, port || 8070, timeout, ssl, userAgent, keepAlive, password, handleError);
 
         if (defaultMixin) this.m_defaultMixin = defaultMixin;
         if (decimalDivisor) this.m_decimalDivisor = decimalDivisor;
@@ -49,8 +49,9 @@ export class WalletAPI extends  HTTPClient {
     /**
      * Retrieves a list of the addresses in the wallet container
      */
-    public async addresses(): Promise<string[]> {
+    public async addresses (): Promise<string[]> {
         const response = await this.get('addresses');
+
         return response.addresses;
     }
 
@@ -58,7 +59,7 @@ export class WalletAPI extends  HTTPClient {
      * Retrieves the balance for the entire wallet container or the specified wallet address
      * @param address the wallet address to check or undefined for the entire container
      */
-    public async balance(address?: string): Promise<WalletAPIInterfaces.IWalletBalance> {
+    public async balance (address?: string): Promise<WalletAPIInterfaces.IWalletBalance> {
         const url = (address) ? format('balance/%s', address) : 'balance';
 
         const balance = await this.get(url);
@@ -72,7 +73,7 @@ export class WalletAPI extends  HTTPClient {
     /**
      * Retrieves the balance for every wallet address in the container
      */
-    public async balances(): Promise<WalletAPIInterfaces.IWalletBalances[]> {
+    public async balances (): Promise<WalletAPIInterfaces.IWalletBalances[]> {
         const balances = await this.get('balances');
 
         return balances.map((elem: WalletAPIInterfaces.IWalletBalance) => {
@@ -86,7 +87,7 @@ export class WalletAPI extends  HTTPClient {
     /**
      * Closes the wallet container that is currently open
      */
-    public async close(): Promise<void> {
+    public async close (): Promise<void> {
         return this.delete('wallet');
     }
 
@@ -98,24 +99,22 @@ export class WalletAPI extends  HTTPClient {
      * @param daemonPort the node port to use for the wallet container
      * @param daemonSSL whether the node uses SSL or not
      */
-    public async create(
+    public async create (
         filename: string,
         password: string,
-        daemonHost?: string,
-        daemonPort?: number,
-        daemonSSL?: boolean
+        daemonHost = '127.0.0.1',
+        daemonPort = 11898,
+        daemonSSL = false
     ): Promise<void> {
-        daemonHost = daemonHost || '127.0.0.1';
-        daemonPort = daemonPort || 11898;
-        daemonSSL = daemonSSL || false;
-
-        return this.post('wallet/create', {daemonHost, daemonPort, daemonSSL, filename, password});
+        return this.post(
+            'wallet/create',
+            { daemonHost, daemonPort, daemonSSL, filename, password });
     }
 
     /**
      * Creates a new, random address in the wallet container
      */
-    public async createAddress(): Promise<WalletAPIInterfaces.IWallet> {
+    public async createAddress (): Promise<WalletAPIInterfaces.IWallet> {
         return this.post('addresses/create');
     }
 
@@ -124,7 +123,7 @@ export class WalletAPI extends  HTTPClient {
      * @param address the address to use to generate the integrated address
      * @param paymentId the payment ID to use to generate the integrated address
      */
-    public async createIntegratedAddress(address: string, paymentId: string): Promise<string> {
+    public async createIntegratedAddress (address: string, paymentId: string): Promise<string> {
         const url = format('addresses/%s/%s', address, paymentId);
 
         const response = await this.get(url);
@@ -136,17 +135,17 @@ export class WalletAPI extends  HTTPClient {
      * Deletes the given subwallet from the container
      * @param address the address of the subwallet to delete
      */
-    public async deleteAddress(address: string): Promise<void> {
+    public async deleteAddress (address: string): Promise<void> {
         const url = format('addresses/%s', address);
 
         return this.delete(url);
     }
 
     /**
-     * Deletes a previous prepared transaction
+t     * Deletes a previous prepared transaction
      * @param hash the hash of the prepared transaction
      */
-    public async deletePreparedTransaction(hash: string): Promise<void> {
+    public async deletePreparedTransaction (hash: string): Promise<void> {
         const url = format('transactions/prepared/%s', hash);
 
         return this.delete(url);
@@ -155,7 +154,7 @@ export class WalletAPI extends  HTTPClient {
     /**
      * Retrieves the node, address, port, fee, and fee address of the connected node
      */
-    public async getNode(): Promise<WalletAPIInterfaces.INode> {
+    public async getNode (): Promise<WalletAPIInterfaces.INode> {
         const response = await this.get('node');
 
         response.nodeFee = fromAtomicUnits(response.nodeFee, this.m_decimalDivisor);
@@ -168,11 +167,11 @@ export class WalletAPI extends  HTTPClient {
      * @param privateSpendKey the private spend key of the subwallet to import
      * @param scanHeight the height to start scanning from upon import of the subwallet
      */
-    public async importAddress(
+    public async importAddress (
         privateSpendKey: string,
-        scanHeight: number = 0
+        scanHeight = 0
     ): Promise<string> {
-        const response = await this.post('addresses/import', {privateSpendKey, scanHeight});
+        const response = await this.post('addresses/import', { privateSpendKey, scanHeight });
 
         return response.address;
     }
@@ -182,11 +181,11 @@ export class WalletAPI extends  HTTPClient {
      * @param walletIndex the index of the deterministic subwallet
      * @param scanHeight the height to start scanning from upon import of the subwallet
      */
-    public async importDeterministic(
-        walletIndex: number = 0,
-        scanHeight: number = 0
+    public async importDeterministic (
+        walletIndex = 0,
+        scanHeight = 0
     ): Promise<string> {
-        const response = await this.post('addresses/import/deterministic', {walletIndex, scanHeight});
+        const response = await this.post('addresses/import/deterministic', { walletIndex, scanHeight });
 
         return response.address;
     }
@@ -202,12 +201,12 @@ export class WalletAPI extends  HTTPClient {
      * @param daemonPort the node port to use for the wallet container
      * @param daemonSSL whether the node uses SSL or not
      */
-    public async importKey(
+    public async importKey (
         filename: string,
         password: string,
         privateViewKey: string,
         privateSpendKey: string,
-        scanHeight: number = 0,
+        scanHeight = 0,
         daemonHost?: string,
         daemonPort?: number,
         daemonSSL?: boolean
@@ -225,7 +224,7 @@ export class WalletAPI extends  HTTPClient {
             scanHeight,
             privateViewKey,
             privateSpendKey
-        })
+        });
     }
 
     /**
@@ -238,11 +237,11 @@ export class WalletAPI extends  HTTPClient {
      * @param daemonPort the node port to use for the wallet container
      * @param daemonSSL whether the node uses SSL or not
      */
-    public async importSeed(
+    public async importSeed (
         filename: string,
         password: string,
         mnemonicSeed: string,
-        scanHeight: number = 0,
+        scanHeight = 0,
         daemonHost?: string,
         daemonPort?: number,
         daemonSSL?: boolean
@@ -259,7 +258,7 @@ export class WalletAPI extends  HTTPClient {
             password,
             scanHeight,
             mnemonicSeed
-        })
+        });
     }
 
     /**
@@ -267,8 +266,8 @@ export class WalletAPI extends  HTTPClient {
      * @param publicSpendKey the public spend key of the subwallet
      * @param scanHeight the height to start scanning from upon import of the subwallet
      */
-    public async importViewAddress(publicSpendKey: string, scanHeight: number = 0): Promise<string> {
-        const response = await this.post('addresses/import/view', {publicSpendKey, scanHeight});
+    public async importViewAddress (publicSpendKey: string, scanHeight = 0): Promise<string> {
+        const response = await this.post('addresses/import/view', { publicSpendKey, scanHeight });
 
         return response.address;
     }
@@ -284,12 +283,12 @@ export class WalletAPI extends  HTTPClient {
      * @param daemonPort the node port to use for the wallet container
      * @param daemonSSL whether the node uses SSL or not
      */
-    public async importViewOnly(
+    public async importViewOnly (
         filename: string,
         password: string,
         privateViewKey: string,
         address: string,
-        scanHeight: number = 0,
+        scanHeight = 0,
         daemonHost?: string,
         daemonPort?: number,
         daemonSSL?: boolean
@@ -307,7 +306,7 @@ export class WalletAPI extends  HTTPClient {
             scanHeight,
             privateViewKey,
             address
-        })
+        });
     }
 
     /**
@@ -315,7 +314,7 @@ export class WalletAPI extends  HTTPClient {
      * public and private spend keys for the given address
      * @param address the wallet address
      */
-    public async keys(address?: string): Promise<string | WalletAPIInterfaces.IWallet> {
+    public async keys (address?: string): Promise<string | WalletAPIInterfaces.IWallet> {
         const url = (address) ? format('keys/%s', address) : 'keys';
 
         const response = await this.get(url);
@@ -329,7 +328,7 @@ export class WalletAPI extends  HTTPClient {
      * Retrieves the menemonic seed for the given address if possible
      * @param address the wallet address
      */
-    public async keysMnemonic(address: string): Promise<string> {
+    public async keysMnemonic (address: string): Promise<string> {
         const url = format('keys/mnemonic/%s', address);
 
         const response = await this.get(url);
@@ -342,11 +341,11 @@ export class WalletAPI extends  HTTPClient {
      * @param address the address of the recipient
      * @param amount the human readable amount to send to the recipient
      */
-    public newDestination(address: string, amount: number): WalletAPIInterfaces.ITransferDestination {
+    public newDestination (address: string, amount: number): WalletAPIInterfaces.ITransferDestination {
         return {
             address: address,
             amount: toAtomicUnits(amount, this.m_decimalDivisor)
-        }
+        };
     }
 
     /**
@@ -357,17 +356,17 @@ export class WalletAPI extends  HTTPClient {
      * @param daemonPort the node port to use for the wallet container
      * @param daemonSSL whether the node uses SSL or not
      */
-    public async open(filename: string,
-                      password: string,
-                      daemonHost?: string,
-                      daemonPort?: number,
-                      daemonSSL?: boolean
+    public async open (filename: string,
+        password: string,
+        daemonHost?: string,
+        daemonPort?: number,
+        daemonSSL?: boolean
     ): Promise<void> {
         daemonHost = daemonHost || '127.0.0.1';
         daemonPort = daemonPort || 11898;
         daemonSSL = daemonSSL || false;
 
-        return this.post('wallet/open', {daemonHost, daemonPort, daemonSSL, filename, password});
+        return this.post('wallet/open', { daemonHost, daemonPort, daemonSSL, filename, password });
     }
 
     /**
@@ -381,7 +380,7 @@ export class WalletAPI extends  HTTPClient {
      * @param unlockTime the unlock time of the new transaction
      * @param extraData any extra data to be included in the TX_EXTRA field of the transaction
      */
-    public async prepareAdvanced(
+    public async prepareAdvanced (
         destinations: WalletAPIInterfaces.ITransferDestination[],
         mixin?: number,
         fee?: WalletAPIInterfaces.IFeeType,
@@ -389,7 +388,7 @@ export class WalletAPI extends  HTTPClient {
         paymentId?: string,
         changeAddress?: string,
         unlockTime?: number,
-        extraData?: object | string
+        extraData?: any | string
     ): Promise<WalletAPIInterfaces.ISendTransactionResult> {
         mixin = mixin || this.m_defaultMixin;
         unlockTime = unlockTime || this.m_defaultUnlockTime;
@@ -425,7 +424,7 @@ export class WalletAPI extends  HTTPClient {
         };
 
         if (fee.fee) {
-            request.fee = fee.fee
+            request.fee = fee.fee;
         } else {
             request.feePerByte = fee.feePerByte;
         }
@@ -449,7 +448,7 @@ export class WalletAPI extends  HTTPClient {
      * @param amount the amount to send in the transaction
      * @param paymentId the payment ID to include with the transaction
      */
-    public async prepareBasic(
+    public async prepareBasic (
         address: string,
         amount: number,
         paymentId?: string
@@ -474,7 +473,7 @@ export class WalletAPI extends  HTTPClient {
     /**
      * Retrieves the primary public wallet address of the container
      */
-    public async primaryAddress(): Promise<string> {
+    public async primaryAddress (): Promise<string> {
         const response = await this.get('addresses/primary');
 
         return response.address;
@@ -484,15 +483,15 @@ export class WalletAPI extends  HTTPClient {
      * Resets and saves the wallet container, beginning scanning from the height given, if any
      * @param scanHeight the scan height at which to begin scanning
      */
-    public async reset(scanHeight: number = 0): Promise<void> {
-        return this.put('reset', {scanHeight});
+    public async reset (scanHeight = 0): Promise<void> {
+        return this.put('reset', { scanHeight });
     }
 
     /**
      * Saves the wallet container currently open to disk
      */
-    public async save(): Promise<void> {
-        return this.put('save');
+    public async save (): Promise<void> {
+        return this.put('save', false);
     }
 
     /**
@@ -506,7 +505,7 @@ export class WalletAPI extends  HTTPClient {
      * @param unlockTime the unlock time of the new transaction
      * @param extraData any extra data to be included in the TX_EXTRA field of the transaction
      */
-    public async sendAdvanced(
+    public async sendAdvanced (
         destinations: WalletAPIInterfaces.ITransferDestination[],
         mixin?: number,
         fee?: WalletAPIInterfaces.IFeeType,
@@ -514,7 +513,7 @@ export class WalletAPI extends  HTTPClient {
         paymentId?: string,
         changeAddress?: string,
         unlockTime?: number,
-        extraData?: object | string
+        extraData?: any | string
     ): Promise<WalletAPIInterfaces.ISendTransactionResult> {
         mixin = mixin || this.m_defaultMixin;
         unlockTime = unlockTime || this.m_defaultUnlockTime;
@@ -550,7 +549,7 @@ export class WalletAPI extends  HTTPClient {
         };
 
         if (fee.fee) {
-            request.fee = fee.fee
+            request.fee = fee.fee;
         } else {
             request.feePerByte = fee.feePerByte;
         }
@@ -574,7 +573,7 @@ export class WalletAPI extends  HTTPClient {
      * @param amount the amount to send in the transaction
      * @param paymentId the payment ID to include with the transaction
      */
-    public async sendBasic(
+    public async sendBasic (
         address: string,
         amount: number,
         paymentId?: string
@@ -600,11 +599,12 @@ export class WalletAPI extends  HTTPClient {
      * Sends a previously prepared transaction
      * @param transactionHash the hash of the prepared transaction
      */
-    public async sendPrepared(transactionHash: string): Promise<void> {
-        const response = await this.post('transactions/send/prepared', {transactionHash});
+    public async sendPrepared (transactionHash: string): Promise<void> {
+        const response = await this.post('transactions/send/prepared', { transactionHash });
 
-        if (response.transactionHash !== transactionHash)
+        if (response.transactionHash !== transactionHash) {
             throw new Error('Could not send prepared transaction');
+        }
     }
 
     /**
@@ -613,7 +613,7 @@ export class WalletAPI extends  HTTPClient {
      * @param mixin the number of mixins to use in the fusion transaction
      * @param sourceAddresses the source addresses, if any, of the funds for the fusion transaction
      */
-    public async sendFusionAdvanced(
+    public async sendFusionAdvanced (
         address: string,
         mixin?: number,
         sourceAddresses?: string[]
@@ -638,7 +638,7 @@ export class WalletAPI extends  HTTPClient {
     /**
      * Sends a basic fusion transaction
      */
-    public async sendFusionBasic(): Promise<string> {
+    public async sendFusionBasic (): Promise<string> {
         const response = await this.post('transactions/send/fusion/basic');
 
         return response.transactionHash;
@@ -650,11 +650,11 @@ export class WalletAPI extends  HTTPClient {
      * @param daemonPort the node port to use for the wallet container
      * @param daemonSSL whether the node uses SSL or not
      */
-    public async setNode(daemonHost?: string,
-                         daemonPort?: number,
-                         daemonSSL: boolean = false
+    public async setNode (daemonHost?: string,
+        daemonPort?: number,
+        daemonSSL = false
     ): Promise<void> {
-        const request = {daemonHost, daemonPort, daemonSSL};
+        const request = { daemonHost, daemonPort, daemonSSL };
 
         if (!request.daemonHost) delete request.daemonHost;
         if (!request.daemonPort) delete request.daemonPort;
@@ -665,7 +665,7 @@ export class WalletAPI extends  HTTPClient {
     /**
      * Retrieves the wallet sync status, peer count, and network hashrate
      */
-    public async status(): Promise<WalletAPIInterfaces.IStatusInfo> {
+    public async status (): Promise<WalletAPIInterfaces.IStatusInfo> {
         return this.get('status');
     }
 
@@ -673,7 +673,7 @@ export class WalletAPI extends  HTTPClient {
      * Retrieves details on a given transaction if found
      * @param hash the transaction hash to retrieve
      */
-    public async transactionByHash(hash: string): Promise<WalletAPIInterfaces.ITransactionInfo> {
+    public async transactionByHash (hash: string): Promise<WalletAPIInterfaces.ITransactionInfo> {
         const url = format('transactions/hash/%s', hash);
 
         const response = await this.get(url);
@@ -682,10 +682,10 @@ export class WalletAPI extends  HTTPClient {
 
         response.transaction.transfers = response.transaction.transfers.map(
             (elem: WalletAPIInterfaces.ITransferDestination) => {
-            elem.amount = fromAtomicUnits(elem.amount, this.m_decimalDivisor);
+                elem.amount = fromAtomicUnits(elem.amount, this.m_decimalDivisor);
 
-            return elem;
-        });
+                return elem;
+            });
 
         return response;
     }
@@ -694,7 +694,7 @@ export class WalletAPI extends  HTTPClient {
      * Retrieves the transaction private key that can be used to audit a transaction
      * @param hash
      */
-    public async transactionPrivateKey(hash: string): Promise<string> {
+    public async transactionPrivateKey (hash: string): Promise<string> {
         const url = format('/transactions/privatekey/%s', hash);
 
         const response = await this.get(url);
@@ -707,7 +707,7 @@ export class WalletAPI extends  HTTPClient {
      * @param startHeight the height to return transfers from
      * @param endHeight the height to return transactions until
      */
-    public async transactions(
+    public async transactions (
         startHeight?: number,
         endHeight?: number
     ): Promise<WalletAPIInterfaces.ITransactionInfo[]> {
@@ -743,9 +743,9 @@ export class WalletAPI extends  HTTPClient {
      * @param startHeight the height to return transfers from
      * @param endHeight the height to return transactions until
      */
-    public async transactionsByAddress(
+    public async transactionsByAddress (
         address: string,
-        startHeight: number = 0,
+        startHeight = 0,
         endHeight?: number
     ): Promise<WalletAPIInterfaces.ITransactionInfo[]> {
         let url = format('transactions/address/%s/%s', address, startHeight);
@@ -775,7 +775,7 @@ export class WalletAPI extends  HTTPClient {
      * Retrieves a list of all unconfirmed outgoing transactions in the wallet container
      * @param address
      */
-    public async unconfirmedTransactions(address?: string): Promise<WalletAPIInterfaces.ITransactionInfo[]> {
+    public async unconfirmedTransactions (address?: string): Promise<WalletAPIInterfaces.ITransactionInfo[]> {
         const url = (address) ? format('transactions/unconfirmed/%s', address) : 'transactions/unconfirmed';
 
         const response = await this.get(url);
@@ -799,31 +799,31 @@ export class WalletAPI extends  HTTPClient {
      * Validates a given address
      * @param address the wallet address to validate
      */
-    public async validateAddress(address: string): Promise<WalletAPIInterfaces.IValidationInfo> {
-        return this.post('addresses/validate', {address});
+    public async validateAddress (address: string): Promise<WalletAPIInterfaces.IValidationInfo> {
+        return this.post('addresses/validate', { address });
     }
 }
 
 /** @ignore */
-function handleError(err: any): Error {
-    const errorMessage = (err.error && err.error.errorMessage) ? err.error.errorMessage : '';
-    if (errorMessage.indexOf('cannot get a mnemonic seed') !== -1) return new Error(errorMessage);
-    if (err.message && err.message.indexOf('ECONNREFUSED') !== -1)
-        return new Error('Cannot connect to WalletAPI at given host and port.')
+function handleError (statusCode: number, error: IError): Error {
+    if (error.message.indexOf('cannot get a mnemonic seed') !== -1) return new Error(error.message);
+    if (error.message && error.message.indexOf('ECONNREFUSED') !== -1) {
+        return new Error('Cannot connect to WalletAPI at given host and port.');
+    }
 
-    switch (err.statusCode) {
-        case 400: return new Error('A parse error occurred, or an error occurred processing your request: '
-            + errorMessage);
-        case 401: return new Error('API key is missing or invalid');
-        case 403: return new Error('This operation requires a wallet be open and one has not been opened yet');
-        case 404: return new Error('The item requested does not exist');
-        case 500: return new Error('An exception was throw while processing the request. See the console for logs.');
-        default: return new Error(err.toString());
+    switch (statusCode) {
+    case 400: return new Error('A parse error occurred, or an error occurred processing your request: ' +
+            error.message);
+    case 401: return new Error('API key is missing or invalid');
+    case 403: return new Error('This operation requires a wallet be open and one has not been opened yet');
+    case 404: return new Error('The item requested does not exist');
+    case 500: return new Error('An exception was throw while processing the request. See the console for logs.');
+    default: return new Error(error.toString());
     }
 }
 
 /** @ignore */
-function fromAtomicUnits(amount: number, decimalDivisor: number): number {
+function fromAtomicUnits (amount: number, decimalDivisor: number): number {
     if (amount.toString().indexOf('.') !== -1) return amount;
     return +(
         (amount / decimalDivisor)
@@ -835,12 +835,12 @@ function fromAtomicUnits(amount: number, decimalDivisor: number): number {
 }
 
 /** @ignore */
-function toAtomicUnits(amount: number, decimalDivisor: number): number {
+function toAtomicUnits (amount: number, decimalDivisor: number): number {
     return Math.round(amount * decimalDivisor);
 }
 
 /** @ignore */
-function isHex(str: string): boolean {
+function isHex (str: string): boolean {
     const regex = new RegExp('^[0-9a-fA-F]+$');
     return regex.test(str);
 }
