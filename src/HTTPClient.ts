@@ -233,6 +233,22 @@ export class HTTPClient {
         }
     }
 
+    protected async rpcPost (method: string, params?: any): Promise<any> {
+        const body = {
+            jsonrpc: '2.0',
+            method: method,
+            params: params
+        };
+
+        const response = await this.post('json_rpc', body);
+
+        if (response.error) {
+            throw new Error(response.error.message);
+        }
+
+        return response.result;
+    }
+
     private url (endpoint: string): string {
         return format('%s://%s:%s/%s', this.protocol, this.host, this.port, endpoint);
     }

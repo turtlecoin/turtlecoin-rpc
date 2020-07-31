@@ -4,5 +4,6 @@
 
 export { TurtleCoind } from './TurtleCoind';
 export { WalletAPI } from './WalletAPI';
+export { LegacyTurtleCoind } from './LegacyTurtleCoind';
 export { TurtleCoindInterfaces } from './Types/TurtleCoind';
 export { WalletAPIInterfaces } from './Types/WalletAPI';
