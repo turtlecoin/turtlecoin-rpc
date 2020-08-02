@@ -12,7 +12,7 @@ This project is designed to make it very easy to interact with various RPC APIs 
 
 v2.0.0+ contains multiple breaking changes to the package including the removal of support for Turtle-Service, removal of deprecated TurtleCoind RPC calls that will be removed, renaming of methods, and method argument changes throughout. Please be sure to read the documentation in full before upgrading to v2.0.0+.
 
-v4.0.0+ contains multiple possibly breaking changes to the package as it has been converted to TypeScript. Please be sure to read the documentation in full before upgrading to v4.0.0+.
+v3.0.0+ contains multiple possibly breaking changes to the package as it has been converted to TypeScript. Please be sure to read the documentation in full before upgrading to v3.0.0+. In addition, it has support for the v1.0.0 daemon API. Working with a pre-v1.0.0 daemon requires using the `LegacyTurtleCoind` export.
 
 ## Table of Contents
 
@@ -23,8 +23,8 @@ v4.0.0+ contains multiple possibly breaking changes to the package as it has bee
 
 ## Dependencies
 
-* [NodeJS v8.x](https://nodejs.org) >= 8.x
-* [TurtleCoin](https://github.com/turtlecoin/turtlecoin/releases) >= v1.0.0
+* [NodeJS v8.x](https://nodejs.org) >= 10.x
+* [TurtleCoin](https://github.com/turtlecoin/turtlecoin/releases) >= v0.24.0
 
 ## Installation
 

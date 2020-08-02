@@ -71,7 +71,7 @@
 					<h2>Package Upgrade Warning</h2>
 				</a>
 				<p>v2.0.0+ contains multiple breaking changes to the package including the removal of support for Turtle-Service, removal of deprecated TurtleCoind RPC calls that will be removed, renaming of methods, and method argument changes throughout. Please be sure to read the documentation in full before upgrading to v2.0.0+.</p>
-				<p>v4.0.0+ contains multiple possibly breaking changes to the package as it has been converted to TypeScript. Please be sure to read the documentation in full before upgrading to v4.0.0+.</p>
+				<p>v3.0.0+ contains multiple possibly breaking changes to the package as it has been converted to TypeScript. Please be sure to read the documentation in full before upgrading to v3.0.0+. In addition, it has support for the v1.0.0 daemon API. Working with a pre-v1.0.0 daemon requires using the <code>LegacyTurtleCoind</code> export.</p>
 				<a href="#table-of-contents" id="table-of-contents" style="color: inherit; text-decoration: none;">
 					<h2>Table of Contents</h2>
 				</a>
@@ -85,8 +85,8 @@
 					<h2>Dependencies</h2>
 				</a>
 				<ul>
-					<li><a href="https://nodejs.org">NodeJS v8.x</a> &gt;= 8.x</li>
-					<li><a href="https://github.com/turtlecoin/turtlecoin/releases">TurtleCoin</a> &gt;= v1.0.0</li>
+					<li><a href="https://nodejs.org">NodeJS v8.x</a> &gt;= 10.x</li>
+					<li><a href="https://github.com/turtlecoin/turtlecoin/releases">TurtleCoin</a> &gt;= v0.24.0</li>
 				</ul>
 				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
 					<h2>Installation</h2>
@@ -171,6 +171,9 @@ Please see the included LICENSE <span class="hljs-keyword">file</span> <span cla
 						<a href="globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-namespace">
+						<a href="modules/legacyturtlecoindinterfaces.html">Legacy<wbr>Turtle<wbr>Coind<wbr>Interfaces</a>
+					</li>
+					<li class=" tsd-kind-namespace">
 						<a href="modules/turtlecoindinterfaces.html">Turtle<wbr>Coind<wbr>Interfaces</a>
 					</li>
 					<li class=" tsd-kind-namespace">
@@ -180,6 +183,9 @@ Please see the included LICENSE <span class="hljs-keyword">file</span> <span cla
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-class">
+						<a href="classes/legacyturtlecoind.html" class="tsd-kind-icon">Legacy<wbr>Turtle<wbr>Coind</a>
+					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/turtlecoind.html" class="tsd-kind-icon">Turtle<wbr>Coind</a>
 					</li>

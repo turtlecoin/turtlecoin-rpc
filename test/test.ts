@@ -7,7 +7,7 @@ import { after, before, describe, it } from 'mocha';
 import { TurtleCoind, WalletAPI, WalletAPIInterfaces, LegacyTurtleCoind } from '../src';
 
 describe('TurtleCoind < 1.0.0', function () {
-    this.timeout(10000);
+    this.timeout(60000);
 
     const server = new LegacyTurtleCoind('seed.turtlenode.io');
 
@@ -203,7 +203,7 @@ describe('TurtleCoind < 1.0.0', function () {
 });
 
 describe('TurtleCoind >= 1.0.0', function () {
-    this.timeout(10000);
+    this.timeout(60000);
 
     const server = new TurtleCoind('localhost');
 
@@ -372,7 +372,7 @@ describe('TurtleCoind >= 1.0.0', function () {
 });
 
 describe('WalletAPI', async function () {
-    this.timeout(30000);
+    this.timeout(60000);
 
     const randomFilename = () => (Math.random() * 100000000).toString() + '.wallet';
 
