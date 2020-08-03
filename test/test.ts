@@ -205,6 +205,8 @@ describe('TurtleCoind < 1.0.0', function () {
 describe('TurtleCoind >= 1.0.0', function () {
     this.timeout(60000);
 
+    let is_explorer = false;
+
     const server = new TurtleCoind('localhost');
 
     before('check()', async function () {
@@ -214,12 +216,18 @@ describe('TurtleCoind >= 1.0.0', function () {
             if (result.version.major < 1) {
                 this.skip();
             }
+
+            is_explorer = result.explorer;
         } catch (e) {
             this.skip();
         }
     });
 
-    it('block({hash})', async () => {
+    it('block({hash})', async function () {
+        if (!is_explorer) {
+            return this.skip();
+        }
+
         const hash = '7fb97df81221dd1366051b2d0bc7f49c66c22ac4431d879c895b06d66ef66f4c';
         const prevHash = '0000000000000000000000000000000000000000000000000000000000000000';
         const block = await server.block(hash);
@@ -227,7 +235,11 @@ describe('TurtleCoind >= 1.0.0', function () {
         assert(block.prevHash === prevHash);
     });
 
-    it('block({height})', async () => {
+    it('block({height})', async function () {
+        if (!is_explorer) {
+            return this.skip();
+        }
+
         const hash = '7fb97df81221dd1366051b2d0bc7f49c66c22ac4431d879c895b06d66ef66f4c';
         const prevHash = '0000000000000000000000000000000000000000000000000000000000000000';
         const block = await server.block(0);
@@ -235,11 +247,40 @@ describe('TurtleCoind >= 1.0.0', function () {
         assert(block.prevHash === prevHash);
     });
 
+    it('rawBlock({hash})', async function () {
+        if (!is_explorer) {
+            return this.skip();
+        }
+
+        const expected_blob = '0100000000000000000000000000000000000000000000000000000000000000000000' +
+            '46000000010a01ff000188f3b501029b2e4c0281c0b02e7c53291a94d1d0cbff8883f8024f5142ee494ffbbd' +
+            '088071210142694232c5b04151d9e4c27d31ec7a68ea568b19488cfcb422659a07a0e44dd500';
+        const hash = '7fb97df81221dd1366051b2d0bc7f49c66c22ac4431d879c895b06d66ef66f4c';
+        const block = await server.rawBlock(hash);
+        assert(block.blob === expected_blob);
+    });
+
+    it('rawBlock({height})', async function () {
+        if (!is_explorer) {
+            return this.skip();
+        }
+
+        const expected_blob = '0100000000000000000000000000000000000000000000000000000000000000000000' +
+            '46000000010a01ff000188f3b501029b2e4c0281c0b02e7c53291a94d1d0cbff8883f8024f5142ee494ffbbd' +
+            '088071210142694232c5b04151d9e4c27d31ec7a68ea568b19488cfcb422659a07a0e44dd500';
+        const block = await server.rawBlock(0);
+        assert(block.blob === expected_blob);
+    });
+
     it('blockCount()', () => {
         return server.blockCount();
     });
 
-    it('blockHeaders()', async () => {
+    it('blockHeaders()', async function () {
+        if (!is_explorer) {
+            return this.skip();
+        }
+
         const headers = await server.blockHeaders(100);
         assert(headers.length === 31);
     });
@@ -306,7 +347,7 @@ describe('TurtleCoind >= 1.0.0', function () {
         assert(sync.blocks.length === 10);
     });
 
-    it('sendRawTransaction()', async () => {
+    it('submitTransaction()', async () => {
         const txn = '010001026404d48008fff717d2872294b71e51b8304ed711c0fe240a2614610cc0380a5d0b8b13e2652e6c062fbb' +
             '056b7f1f015a027b2288942d52247932af36dc1d722da61f296089015b83d591f5a71afafa948021015af0c037fcfe8' +
             'c50f1e11876c98338fe664c85bc11cd696bc04c988b5669deda96a4299dd9cb471795d079da82e25827badcd79400b3' +
@@ -343,7 +384,11 @@ describe('TurtleCoind >= 1.0.0', function () {
             .catch(() => assert(true));
     });
 
-    it('transaction()', async () => {
+    it('transaction({hash})', async function () {
+        if (!is_explorer) {
+            return this.skip();
+        }
+
         const hash = 'bdcbc8162dc1949793c1c6d0656ac60a6e5a3c505969b18bdfa10360d1c2909d';
         const txn = await server.transaction(hash);
 
@@ -353,8 +398,36 @@ describe('TurtleCoind >= 1.0.0', function () {
         assert(txn.block.hash === expectedBlock && txn.meta.publicKey === expectedPublicKey);
     });
 
-    it('transactionPool()', () => {
+    it('rawTransaction({hash})', async function () {
+        if (!is_explorer) {
+            return this.skip();
+        }
+
+        const expected_blob = '013201ff0a06010279a78987dd1e771524a5ad4fb7b05cc591f2786cbade5244c3b1c6f' +
+            '5cebdf54d1e028ea944735448b57ffacd5c39b1a8077da6b442c56a597d79c469f1c10f5918dbc80102efb31a' +
+            'bbb1479f33eab2f6a9e9a347a75ff966b270303163a18864c6d29382e980f10402a77b76ae03cd068e514ded0' +
+            '20301107667fe21e984de6f5af24ab09f89662a7ea0f736023c099cb84669fc57f65aa8154b7ff683cbbd31f7' +
+            'f0963601a2f5a02eb1137d5880897a0266e2c2153e0d954073cf4b48c23b16c922dc7b346093571a9dd1c265d' +
+            'a08473b21017d812f35cfff8bc6b5d118944d6476c73495f5c2de3f6a923f3510661646ac9d';
+        const hash = 'bdcbc8162dc1949793c1c6d0656ac60a6e5a3c505969b18bdfa10360d1c2909d';
+        const txn = await server.rawTransaction(hash);
+        assert(txn === expected_blob);
+    });
+
+    it('transactionPool()', async function () {
+        if (!is_explorer) {
+            return this.skip();
+        }
+
         return server.transactionPool();
+    });
+
+    it('rawTransactionPool()', async function () {
+        if (!is_explorer) {
+            return this.skip();
+        }
+
+        return server.rawTransactionPool();
     });
 
     it('transactionStatus()', async () => {
