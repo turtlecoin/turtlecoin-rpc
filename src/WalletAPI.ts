@@ -827,13 +827,13 @@ function handleError (statusCode: number, error: IError): Error {
     }
 
     switch (statusCode) {
-    case 400: return new Error('A parse error occurred, or an error occurred processing your request: ' +
+        case 400: return new Error('A parse error occurred, or an error occurred processing your request: ' +
             error.message);
-    case 401: return new Error('API key is missing or invalid');
-    case 403: return new Error('This operation requires a wallet be open and one has not been opened yet');
-    case 404: return new Error('The item requested does not exist');
-    case 500: return new Error('An exception was throw while processing the request. See the console for logs.');
-    default: return new Error(error.toString());
+        case 401: return new Error('API key is missing or invalid');
+        case 403: return new Error('This operation requires a wallet be open and one has not been opened yet');
+        case 404: return new Error('The item requested does not exist');
+        case 500: return new Error('An exception was throw while processing the request. See the console for logs.');
+        default: return new Error(error.toString());
     }
 }
 

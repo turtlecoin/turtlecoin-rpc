@@ -710,7 +710,8 @@ describe('WalletAPI', async function () {
                     randomFilename(),
                     password,
                     '84271126f661ae8cdb06de981d69fd7fc7b14aaa9af53766440836b5c52da900',
-                    'TRTLuxQ2jXVeGrQNKFgAvGc4GifYEcrLC8UWEebLMjfNDt7JXZhAyzChdAthLTZHWYPKRgeimfJqzHBmvhwUzYgPAHML6SRXjoz'
+                    'TRTLuxQ2jXVeGrQNKFgAvGc4GifYEcrLC8UWEebLMjfNDt7JXZhAyzChdAthLTZH' +
+                    'WYPKRgeimfJqzHBmvhwUzYgPAHML6SRXjoz'
                 );
             });
 
