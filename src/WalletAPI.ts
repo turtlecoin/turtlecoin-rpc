@@ -47,6 +47,21 @@ export class WalletAPI extends HTTPClient {
     }
 
     /**
+     * Returns if the Wallet-API service is reachable
+     */
+    public async alive (): Promise<boolean> {
+        try {
+            await this.status();
+        } catch (e) {
+            if (e.toString().indexOf('ECONNREFUSED') !== -1) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Retrieves a list of the addresses in the wallet container
      */
     public async addresses (): Promise<string[]> {
@@ -808,7 +823,7 @@ t     * Deletes a previous prepared transaction
 function handleError (statusCode: number, error: IError): Error {
     if (error.message.indexOf('cannot get a mnemonic seed') !== -1) return new Error(error.message);
     if (error.message && error.message.indexOf('ECONNREFUSED') !== -1) {
-        return new Error('Cannot connect to WalletAPI at given host and port.');
+        return new Error('ECONNREFUSED: Cannot connect to WalletAPI at given host and port.');
     }
 
     switch (statusCode) {
