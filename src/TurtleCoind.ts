@@ -76,6 +76,7 @@ export class TurtleCoind extends HTTPClient {
 
     /**
      * Retrieves the block information for the specified block
+     * Requires the daemon to have the explorer enabled
      * @param block the block height or hash
      */
     async block (block: string | number): Promise<TurtleCoindInterfaces.IBlock> {
@@ -103,6 +104,7 @@ export class TurtleCoind extends HTTPClient {
 
     /**
      * Retrieves the block information for the last 30 blocks up to the current height
+     * Requires the daemon to have the explorer enabled
      * @param height the height to stop at
      */
     async blockHeaders (height: number): Promise<TurtleCoindInterfaces.IBlock[]> {
@@ -119,6 +121,7 @@ export class TurtleCoind extends HTTPClient {
 
     /**
      * Retrieves the RawBlock information from the node for the specified block
+     * Requires the daemon to have the explorer enabled
      * @param block the block height or hash
      */
     async rawBlock (block: string | number): Promise<TurtleCoindInterfaces.IRawBlock> {
@@ -155,6 +158,7 @@ export class TurtleCoind extends HTTPClient {
 
     /**
      * Retrieves the transaction information for the specified transaction
+     * Requires the daemon to have the explorer enabled
      * @param hash the transaction hash
      */
     async transaction (hash: string): Promise<TurtleCoindInterfaces.ITransaction> {
@@ -171,6 +175,7 @@ export class TurtleCoind extends HTTPClient {
 
     /**
      * Retrieves the RawTransaction from the node for the specified transaction
+     * Requires the daemon to have the explorer enabled
      * @param hash the transaction hash
      */
     async rawTransaction (hash: string): Promise<string> {
@@ -179,6 +184,7 @@ export class TurtleCoind extends HTTPClient {
 
     /**
      * Retrieves the transaction summary information for the transactions currently
+     * Requires the daemon to have the explorer enabled
      * in the memory pool
      */
     async transactionPool (): Promise<TurtleCoindInterfaces.TransactionSummary[]> {
@@ -187,6 +193,7 @@ export class TurtleCoind extends HTTPClient {
 
     /**
      * Retrieves the RawTransactions currently in the memory pool
+     * Requires the daemon to have the explorer enabled
      */
     async rawTransactionPool (): Promise<string[]> {
         return this.get('transaction/pool/raw');
@@ -293,14 +300,12 @@ export class TurtleCoind extends HTTPClient {
         timestamp = 0,
         skipCoinbaseTransactions = false,
         count = 100): Promise<TurtleCoindInterfaces.IRawSync> {
-        const response = await this.post('sync/raw', {
+        return await this.post('sync/raw', {
             checkpoints,
             count,
             height,
             skipCoinbaseTransactions,
             timestamp
         });
-
-        return response;
     }
 }
