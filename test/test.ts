@@ -34,8 +34,8 @@ describe('TurtleCoind < 1.0.0', function () {
         assert(block.prev_hash === prevHash);
     });
 
-    it('blockCount()', () => {
-        return server.blockCount();
+    it('blockCount()', async () => {
+        await server.blockCount();
     });
 
     it('blockHeaderByHash({hash})', async () => {
@@ -98,12 +98,12 @@ describe('TurtleCoind < 1.0.0', function () {
         assert(response.length === 10);
     });
 
-    it('height()', () => {
-        return server.height();
+    it('height()', async () => {
+        await server.height();
     });
 
-    it('info()', () => {
-        return server.info();
+    it('info()', async () => {
+        await server.info();
     });
 
     it('lastBlockHeader()', async () => {
@@ -111,8 +111,8 @@ describe('TurtleCoind < 1.0.0', function () {
         assert(header.depth === 0);
     });
 
-    it('peers()', () => {
-        return server.peers();
+    it('peers()', async () => {
+        await server.peers();
     });
 
     it('poolChanges()', async () => {
@@ -147,7 +147,7 @@ describe('TurtleCoind < 1.0.0', function () {
             '9c79725170d42fc8968dcd051d2eef49e1726db2fd92e76c47455efff52fc0b473899acaff169316f9654802';
 
         /* We know this test will fail as this txn is no longer valid */
-        return server.sendRawTransaction(txn)
+        await server.sendRawTransaction(txn)
             .then(() => assert(false))
             .catch(() => assert(true));
     });
@@ -168,7 +168,7 @@ describe('TurtleCoind < 1.0.0', function () {
             '8eb8015d43f65f0e189e52e3fe9f0da5b04fed64effc070e1b97e32cb5445a4434a70eda8c6572f';
 
         /* We know this test will fail as this block won't work */
-        return server.submitBlock(block)
+        await server.submitBlock(block)
             .then(() => assert(false))
             .catch(() => assert(true));
     });
@@ -183,7 +183,7 @@ describe('TurtleCoind < 1.0.0', function () {
     });
 
     it('transactionPool()', async () => {
-        return server.transactionPool();
+        await server.transactionPool();
     });
 
     it('transactionsStatus()', async () => {
@@ -305,12 +305,12 @@ describe('TurtleCoind >= 1.0.0', function () {
         assert(indexes.length === 11);
     });
 
-    it('height()', () => {
-        return server.height();
+    it('height()', async () => {
+        await server.height();
     });
 
-    it('info()', () => {
-        return server.info();
+    it('info()', async () => {
+        await server.info();
     });
 
     it('lastBlock()', async () => {
@@ -318,8 +318,8 @@ describe('TurtleCoind >= 1.0.0', function () {
         assert(header.depth === 0);
     });
 
-    it('peers()', () => {
-        return server.peers();
+    it('peers()', async () => {
+        await server.peers();
     });
 
     it('transactionPoolChanges()', async () => {
@@ -358,7 +358,7 @@ describe('TurtleCoind >= 1.0.0', function () {
             '9c79725170d42fc8968dcd051d2eef49e1726db2fd92e76c47455efff52fc0b473899acaff169316f9654802';
 
         /* We know this test will fail as this txn is no longer valid */
-        return server.submitTransaction(txn)
+        await server.submitTransaction(txn)
             .then(() => assert(false))
             .catch(() => assert(true));
     });
@@ -379,7 +379,7 @@ describe('TurtleCoind >= 1.0.0', function () {
             '8eb8015d43f65f0e189e52e3fe9f0da5b04fed64effc070e1b97e32cb5445a4434a70eda8c6572f';
 
         /* We know this test will fail as this block won't work */
-        return server.submitBlock(block)
+        await server.submitBlock(block)
             .then(() => assert(false))
             .catch(() => assert(true));
     });
@@ -419,7 +419,7 @@ describe('TurtleCoind >= 1.0.0', function () {
             return this.skip();
         }
 
-        return server.transactionPool();
+        await server.transactionPool();
     });
 
     it('rawTransactionPool()', async function () {
@@ -427,7 +427,7 @@ describe('TurtleCoind >= 1.0.0', function () {
             return this.skip();
         }
 
-        return server.rawTransactionPool();
+        await server.rawTransactionPool();
     });
 
     it('transactionStatus()', async () => {
@@ -458,19 +458,17 @@ describe('WalletAPI', async function () {
         let skipped = false;
 
         before('create()', async function () {
-            try {
-                await server.status();
-            } catch (e) {
+            if (!await server.alive()) {
                 skipped = true;
                 this.skip();
             }
 
-            return await server.create(newFilename, password);
+            await server.create(newFilename, password);
         });
 
         after('close()', async function () {
             if (!skipped) {
-                return server.close();
+                await server.close();
             }
         });
 
@@ -496,7 +494,7 @@ describe('WalletAPI', async function () {
         });
 
         it('createAddress()', async () => {
-            return server.createAddress();
+            await server.createAddress();
         });
 
         it('createIntegratedAddress()', async () => {
@@ -515,7 +513,7 @@ describe('WalletAPI', async function () {
         it('deleteAddress()', async () => {
             const wallet = await server.createAddress();
             if (wallet.address) {
-                return server.deleteAddress(wallet.address);
+                await server.deleteAddress(wallet.address);
             }
         });
 
@@ -527,16 +525,16 @@ describe('WalletAPI', async function () {
         });
 
         it('importAddress()', async () => {
-            return server.importAddress(
+            await server.importAddress(
                 'c1493e663cec48cb1db70fc6bb3e04be1eec99f398f5a7c343aa67f159419e09');
         });
 
         it('importDeterministic()', async () => {
-            return server.importDeterministic(5);
+            await server.importDeterministic(5);
         });
 
         it('keys()', async () => {
-            return server.keys();
+            await server.keys();
         });
 
         it('keys(address)', async () => {
@@ -564,15 +562,15 @@ describe('WalletAPI', async function () {
         it.skip('prepareBasic()');
 
         it('primaryAddress()', async () => {
-            return server.primaryAddress();
+            await server.primaryAddress();
         });
 
         it('reset()', async () => {
-            return server.reset();
+            await server.reset();
         });
 
         it('save()', async () => {
-            return server.save();
+            await server.save();
         });
 
         it.skip('sendAdvanced()');
@@ -586,10 +584,10 @@ describe('WalletAPI', async function () {
         it.skip('sendPrepared()');
 
         it('setNode()', async () => {
-            return server.setNode('localhost', 11898);
+            await server.setNode('localhost', 11898);
         });
 
-        it('status', async () => {
+        it('status()', async () => {
             const response = await server.status();
             assert(!response.isViewWallet && response.peerCount);
         });
@@ -632,7 +630,7 @@ describe('WalletAPI', async function () {
                 'hwUzYgPAHML6SRXjoq';
 
             /* We expect this test to fail as this address is invalid */
-            return server.validateAddress(address)
+            await server.validateAddress(address)
                 .then(() => assert(false))
                 .catch(() => assert(true));
         });
@@ -643,9 +641,7 @@ describe('WalletAPI', async function () {
             let skipped = false;
 
             before('check', async function () {
-                try {
-                    await server.status();
-                } catch (e) {
+                if (!await server.alive()) {
                     skipped = true;
                     this.skip();
                 }
@@ -653,12 +649,12 @@ describe('WalletAPI', async function () {
 
             after('close()', async function () {
                 if (!skipped) {
-                    return server.close();
+                    await server.close();
                 }
             });
 
             it('importKey()', async () => {
-                return server.importKey(
+                await server.importKey(
                     randomFilename(),
                     password,
                     '84271126f661ae8cdb06de981d69fd7fc7b14aaa9af53766440836b5c52da900',
@@ -671,9 +667,7 @@ describe('WalletAPI', async function () {
             let skipped = false;
 
             before('check', async function () {
-                try {
-                    await server.status();
-                } catch (e) {
+                if (!await server.alive()) {
                     skipped = true;
                     this.skip();
                 }
@@ -681,12 +675,12 @@ describe('WalletAPI', async function () {
 
             after('close()', async function () {
                 if (!skipped) {
-                    return server.close();
+                    await server.close();
                 }
             });
 
             it('importSeed()', async () => {
-                return server.importSeed(
+                await server.importSeed(
                     randomFilename(),
                     password,
                     'five aphid spiders obnoxious wolf library love anxiety nephew mumble apex tufts ' +
@@ -699,9 +693,7 @@ describe('WalletAPI', async function () {
             let skipped = false;
 
             before('check', async function () {
-                try {
-                    await server.status();
-                } catch (e) {
+                if (!await server.alive()) {
                     skipped = true;
                     this.skip();
                 }
@@ -709,12 +701,12 @@ describe('WalletAPI', async function () {
 
             after('close()', async function () {
                 if (!skipped) {
-                    return server.close();
+                    await server.close();
                 }
             });
 
             it('importViewOnly', async () => {
-                return server.importViewOnly(
+                await server.importViewOnly(
                     randomFilename(),
                     password,
                     '84271126f661ae8cdb06de981d69fd7fc7b14aaa9af53766440836b5c52da900',
@@ -723,7 +715,7 @@ describe('WalletAPI', async function () {
             });
 
             it('importViewAddress()', async () => {
-                return server.importViewAddress(
+                await server.importViewAddress(
                     'adda22257c435d09697d6ffe5841f4e70a32900a0f08e69f75875761a9c524f6');
             });
         });
@@ -733,9 +725,7 @@ describe('WalletAPI', async function () {
         let skipped = false;
 
         before('check', async function () {
-            try {
-                await server.status();
-            } catch (e) {
+            if (!await server.alive()) {
                 skipped = true;
                 this.skip();
             }
@@ -743,12 +733,12 @@ describe('WalletAPI', async function () {
 
         after('close()', async function () {
             if (!skipped) {
-                return server.close();
+                await server.close();
             }
         });
 
         it('open()', async () => {
-            return server.open(newFilename, password);
+            await server.open(newFilename, password);
         });
     });
 });
