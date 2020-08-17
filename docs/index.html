@@ -64,104 +64,9 @@
 				<a href="#turtlecoin-rpc" id="turtlecoin-rpc" style="color: inherit; text-decoration: none;">
 					<h1>TurtleCoin RPC</h1>
 				</a>
-				<p><a href="https://nodei.co/npm/turtlecoin-rpc/"><img src="https://nodei.co/npm/turtlecoin-rpc.png?downloads=true&stars=true" alt="NPM"></a></p>
-				<p><img src="https://img.shields.io/badge/node-%3E%3D8-blue.svg" alt="Prerequisite"> <a href="https://js-rpc.turtlecoin.dev"><img src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" alt="Documentation"></a> <a href="https://github.com/turtlecoin/turtlecoin-rpc-js/graphs/commit-activity"><img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" alt="Maintenance"></a> <a href="https://github.com/turtlecoin/turtlecoin-rpc-js/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-AGPL--3.0-yellow.svg" alt="License: GPL-3.0"></a> <a href="https://twitter.com/_TurtleCoin"><img src="https://img.shields.io/twitter/follow/_TurtleCoin.svg?style=social" alt="Twitter: TurtlePay"></a></p>
-				<p>This project is designed to make it very easy to interact with various RPC APIs available within the <a href="https://turtlecoin.lol">TurtleCoin</a> Project. The package offers both TypeScript &amp; JS bindings to make things fast, easy, and safe.</p>
-				<a href="#package-upgrade-warning" id="package-upgrade-warning" style="color: inherit; text-decoration: none;">
-					<h2>Package Upgrade Warning</h2>
-				</a>
-				<p>v2.0.0+ contains multiple breaking changes to the package including the removal of support for Turtle-Service, removal of deprecated TurtleCoind RPC calls that will be removed, renaming of methods, and method argument changes throughout. Please be sure to read the documentation in full before upgrading to v2.0.0+.</p>
-				<p>v3.0.0+ contains multiple possibly breaking changes to the package as it has been converted to TypeScript. Please be sure to read the documentation in full before upgrading to v3.0.0+. In addition, it has support for the v1.0.0 daemon API. Working with a pre-v1.0.0 daemon requires using the <code>LegacyTurtleCoind</code> export.</p>
-				<a href="#table-of-contents" id="table-of-contents" style="color: inherit; text-decoration: none;">
-					<h2>Table of Contents</h2>
-				</a>
-				<ol>
-					<li><a href="#dependencies">Dependencies</a></li>
-					<li><a href="#installation">Installation</a></li>
-					<li><a href="#intialization">Intialization</a></li>
-					<li><a href="#documentation">Documentation</a></li>
-				</ol>
-				<a href="#dependencies" id="dependencies" style="color: inherit; text-decoration: none;">
-					<h2>Dependencies</h2>
-				</a>
-				<ul>
-					<li><a href="https://nodejs.org">NodeJS v8.x</a> &gt;= 10.x</li>
-					<li><a href="https://github.com/turtlecoin/turtlecoin/releases">TurtleCoin</a> &gt;= v0.24.0</li>
-				</ul>
-				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
-					<h2>Installation</h2>
-				</a>
-				<pre><code class="language-bash">npm install --save turtlecoin-rpc</code></pre>
-				<a href="#legacy-version" id="legacy-version" style="color: inherit; text-decoration: none;">
-					<h3>Legacy Version</h3>
-				</a>
-				<p>If you require support for <code>turtle-service</code> interaction, please install v1.0.3 instead of the current release. For the documentation for the legacy version, please see the <a href="https://www.npmjs.com/package/turtlecoin-rpc/v/1.0.3">v1.0.3 docs</a></p>
-				<pre><code class="language-bash">npm install --save turtlecoin-rpc@1.0.3</code></pre>
-				<a href="#intialization" id="intialization" style="color: inherit; text-decoration: none;">
-					<h2>Intialization</h2>
-				</a>
-				<a href="#turtlecoind" id="turtlecoind" style="color: inherit; text-decoration: none;">
-					<h3>TurtleCoind</h3>
-				</a>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {TurtleCoind} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;turtlecoin-rpc&#x27;</span>;
-
-<span class="hljs-keyword">const</span> daemon = <span class="hljs-keyword">new</span> TurtleCoind({
-  host: <span class="hljs-string">&#x27;127.0.0.1&#x27;</span>, <span class="hljs-comment">// ip address or hostname of the TurtleCoind host</span>
-  port: <span class="hljs-number">11898</span>, <span class="hljs-comment">// what port is the RPC server running on</span>
-  timeout: <span class="hljs-number">2000</span>, <span class="hljs-comment">// request timeout</span>
-  ssl: <span class="hljs-literal">false</span>, <span class="hljs-comment">// whether we need to connect using SSL/TLS</span>
-  userAgent: <span class="hljs-string">&#x27;turtlecoin-rpc/4.0.0&#x27;</span> <span class="hljs-comment">// specify a customer user-agent or use the default</span>
-})</code></pre>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> TurtleCoind = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;turtlecoin-rpc&#x27;</span>).TurtleCoind
-
-<span class="hljs-keyword">const</span> daemon = <span class="hljs-keyword">new</span> TurtleCoind({
-  <span class="hljs-attr">host</span>: <span class="hljs-string">&#x27;127.0.0.1&#x27;</span>, <span class="hljs-comment">// ip address or hostname of the TurtleCoind host</span>
-  <span class="hljs-attr">port</span>: <span class="hljs-number">11898</span>, <span class="hljs-comment">// what port is the RPC server running on</span>
-  <span class="hljs-attr">timeout</span>: <span class="hljs-number">2000</span>, <span class="hljs-comment">// request timeout</span>
-  <span class="hljs-attr">ssl</span>: <span class="hljs-literal">false</span>, <span class="hljs-comment">// whether we need to connect using SSL/TLS</span>
-  <span class="hljs-attr">userAgent</span>: <span class="hljs-string">&#x27;turtlecoin-rpc/4.0.0&#x27;</span> <span class="hljs-comment">// specify a customer user-agent or use the default</span>
-})</code></pre>
-				<a href="#wallet-api" id="wallet-api" style="color: inherit; text-decoration: none;">
-					<h3>Wallet-API</h3>
-				</a>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {WalletAPI} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;turtlecoin-rpc&#x27;</span>;
-
-<span class="hljs-keyword">const</span> wallet = <span class="hljs-keyword">new</span> WalletAPI({
-  host: <span class="hljs-string">&#x27;127.0.0.1&#x27;</span>, <span class="hljs-comment">// ip address or hostname of wallet-api host</span>
-  port: <span class="hljs-number">8070</span>, <span class="hljs-comment">// port wallet-api is running on, default is 8070</span>
-  timeout: <span class="hljs-number">5000</span>, <span class="hljs-comment">// how long to wait before timing out the connection</span>
-  ssl: <span class="hljs-literal">false</span>, <span class="hljs-comment">// whether or not to connect through SSL</span>
-  password: <span class="hljs-string">&#x27;password&#x27;</span>, <span class="hljs-comment">// your rpc password</span>
-  defaultMixin: <span class="hljs-number">3</span>, <span class="hljs-comment">// should be configured to the default mixin, or false if no default mixin is set</span>
-  defaultFee: <span class="hljs-number">0.1</span>, <span class="hljs-comment">// the default fee of your network, in decimal not atomic units</span>
-  decimalDivisor: <span class="hljs-number">100</span>, <span class="hljs-comment">// how many decimals will be used</span>
-  defaultUnlockTime: <span class="hljs-number">0</span>, <span class="hljs-comment">// default unlock time</span>
-  userAgent: <span class="hljs-string">&#x27;turtlecoin-rpc/4.0.0&#x27;</span> <span class="hljs-comment">// specify a customer user-agent or use the default</span>
-})</code></pre>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> WalletAPI = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;turtlecoin-rpc&#x27;</span>).WalletAPI
-
-<span class="hljs-keyword">const</span> wallet = <span class="hljs-keyword">new</span> WalletAPI({
-  <span class="hljs-attr">host</span>: <span class="hljs-string">&#x27;127.0.0.1&#x27;</span>, <span class="hljs-comment">// ip address or hostname of wallet-api host</span>
-  <span class="hljs-attr">port</span>: <span class="hljs-number">8070</span>, <span class="hljs-comment">// port wallet-api is running on, default is 8070</span>
-  <span class="hljs-attr">timeout</span>: <span class="hljs-number">5000</span>, <span class="hljs-comment">// how long to wait before timing out the connection</span>
-  <span class="hljs-attr">ssl</span>: <span class="hljs-literal">false</span>, <span class="hljs-comment">// whether or not to connect through SSL</span>
-  <span class="hljs-attr">password</span>: <span class="hljs-string">&#x27;password&#x27;</span>, <span class="hljs-comment">// your rpc password</span>
-  <span class="hljs-attr">defaultMixin</span>: <span class="hljs-number">3</span>, <span class="hljs-comment">// should be configured to the default mixin, or false if no default mixin is set</span>
-  <span class="hljs-attr">defaultFee</span>: <span class="hljs-number">0.1</span>, <span class="hljs-comment">// the default fee of your network, in decimal not atomic units</span>
-  <span class="hljs-attr">decimalDivisor</span>: <span class="hljs-number">100</span>, <span class="hljs-comment">// how many decimals will be used</span>
-  <span class="hljs-attr">defaultUnlockTime</span>: <span class="hljs-number">0</span>, <span class="hljs-comment">// default unlock time</span>
-  <span class="hljs-attr">userAgent</span>: <span class="hljs-string">&#x27;turtlecoin-rpc/4.0.0&#x27;</span> <span class="hljs-comment">// specify a customer user-agent or use the default</span>
-})</code></pre>
-				<a href="#documentation" id="documentation" style="color: inherit; text-decoration: none;">
-					<h2>Documentation</h2>
-				</a>
-				<p>You can find the full documentation for this library <a href="https://js-rpc.turtlecoin.dev">here</a></p>
-				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
-					<h2>License</h2>
-				</a>
-				<pre><code><span class="hljs-keyword">Copyright</span> (C) 2018-2020 Brandon Lehmann, The TurtleCoin Developers
-
-Please see the included LICENSE <span class="hljs-keyword">file</span> <span class="hljs-keyword">for</span> <span class="hljs-keyword">more</span> information.</code></pre>
+				<p>This package has been merged into <a href="https://utils.turtlecoin.dev">TurtleCoin-Utils</a> and thus is a stub pointed to that package.</p>
+				<p>Please use that package going forward as this package is no longer maintained as a standalone package.</p>
+				<p><a href="https://nodei.co/npm/turtlecoin-utils/"><img src="https://nodei.co/npm/turtlecoin-utils.png?downloads=true&stars=true" alt="NPM"></a></p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -170,28 +75,10 @@ Please see the included LICENSE <span class="hljs-keyword">file</span> <span cla
 					<li class="globals  ">
 						<a href="globals.html"><em>Globals</em></a>
 					</li>
-					<li class=" tsd-kind-namespace">
-						<a href="modules/legacyturtlecoindinterfaces.html">Legacy<wbr>Turtle<wbr>Coind<wbr>Interfaces</a>
-					</li>
-					<li class=" tsd-kind-namespace">
-						<a href="modules/turtlecoindinterfaces.html">Turtle<wbr>Coind<wbr>Interfaces</a>
-					</li>
-					<li class=" tsd-kind-namespace">
-						<a href="modules/walletapiinterfaces.html">WalletAPIInterfaces</a>
-					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class">
-						<a href="classes/legacyturtlecoind.html" class="tsd-kind-icon">Legacy<wbr>Turtle<wbr>Coind</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/turtlecoind.html" class="tsd-kind-icon">Turtle<wbr>Coind</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/walletapi.html" class="tsd-kind-icon">WalletAPI</a>
-					</li>
 				</ul>
 			</nav>
 		</div>
@@ -201,13 +88,6 @@ Please see the included LICENSE <span class="hljs-keyword">file</span> <span cla
 	<div class="container">
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
-			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
-			</ul>
 		</div>
 	</div>
 </footer>

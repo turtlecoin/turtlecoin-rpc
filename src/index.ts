@@ -1,9 +1,12 @@
-// Copyright (c) 2020, Brandon Lehmann, The TurtleCoin Developers
+// Copyright (c) 2020, The TurtleCoin Developers
 //
 // Please see the included LICENSE file for more information.
 
-export { TurtleCoind } from './TurtleCoind';
-export { WalletAPI } from './WalletAPI';
-export { LegacyTurtleCoind } from './LegacyTurtleCoind';
-export { TurtleCoindInterfaces } from './Types/TurtleCoind';
-export { WalletAPIInterfaces } from './Types/WalletAPI';
+export {
+    TurtleCoind,
+    WalletAPI,
+    LegacyTurtleCoind,
+    LegacyTurtleCoindTypes,
+    TurtleCoindTypes,
+    WalletAPITypes
+} from 'turtlecoin-utils';
